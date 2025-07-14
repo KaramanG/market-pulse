@@ -12,7 +12,7 @@ const data = [
 
 function MyChart() {
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="90%" height={300}>
       <LineChart data={data}>
         <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
         <XAxis dataKey="name" />
