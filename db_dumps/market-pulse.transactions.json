@@ -1,0 +1,360 @@
+[{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1cf"
+  },
+  "transaction_id": 3,
+  "sender_account": 1,
+  "transaction_date": "2026-04-01T10:15:00Z",
+  "amount": 1000,
+  "transaction_type": "-",
+  "receiver_account": 3,
+  "purpose": "Оплата за IT-услуги"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1d0"
+  },
+  "transaction_id": 4,
+  "sender_account": 4,
+  "transaction_date": "2026-04-02T14:30:00Z",
+  "amount": 50000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата по счету #112"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1d1"
+  },
+  "transaction_id": 5,
+  "sender_account": 1,
+  "transaction_date": "2026-04-03T09:05:00Z",
+  "amount": 5200,
+  "transaction_type": "-",
+  "receiver_account": 5,
+  "purpose": "Закупка канцтоваров"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1d2"
+  },
+  "transaction_id": 6,
+  "sender_account": 2,
+  "transaction_date": "2026-04-04T11:20:00Z",
+  "amount": 12000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Возврат средств"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1d3"
+  },
+  "transaction_id": 7,
+  "sender_account": 1,
+  "transaction_date": "2026-04-05T16:45:00Z",
+  "amount": 150000,
+  "transaction_type": "-",
+  "receiver_account": 6,
+  "purpose": "Зарплата за март"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1d4"
+  },
+  "transaction_id": 8,
+  "sender_account": 7,
+  "transaction_date": "2026-04-06T12:00:00Z",
+  "amount": 75000,
+  "transaction_type": "-",
+  "receiver_account": 1,
+  "purpose": "Аванс по договору #58-B"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1d5"
+  },
+  "transaction_id": 9,
+  "sender_account": 1,
+  "transaction_date": "2026-04-07T18:10:00Z",
+  "amount": 8900,
+  "transaction_type": "-",
+  "receiver_account": 2,
+  "purpose": "Оплата услуг связи"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1d6"
+  },
+  "transaction_id": 10,
+  "sender_account": 1,
+  "transaction_date": "2026-04-08T13:25:00Z",
+  "amount": 30000,
+  "transaction_type": "-",
+  "receiver_account": 8,
+  "purpose": "Рекламные услуги"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1d7"
+  },
+  "transaction_id": 11,
+  "sender_account": 3,
+  "transaction_date": "2026-04-09T09:55:00Z",
+  "amount": 18000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата по счету #114"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1d8"
+  },
+  "transaction_id": 12,
+  "sender_account": 1,
+  "transaction_date": "2026-04-10T15:00:00Z",
+  "amount": 45000,
+  "transaction_type": "-",
+  "receiver_account": 9,
+  "purpose": "Налоги и сборы"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1d9"
+  },
+  "transaction_id": 13,
+  "sender_account": 1,
+  "transaction_date": "2026-04-11T11:40:00Z",
+  "amount": 11200,
+  "transaction_type": "-",
+  "receiver_account": 2,
+  "purpose": "Оплата хостинга"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1da"
+  },
+  "transaction_id": 14,
+  "sender_account": 5,
+  "transaction_date": "2026-04-12T10:00:00Z",
+  "amount": 60000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Продажа товара"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1db"
+  },
+  "transaction_id": 15,
+  "sender_account": 1,
+  "transaction_date": "2026-04-13T14:20:00Z",
+  "amount": 22000,
+  "transaction_type": "-",
+  "receiver_account": 10,
+  "purpose": "Закупка оборудования"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1dc"
+  },
+  "transaction_id": 16,
+  "sender_account": 6,
+  "transaction_date": "2026-04-14T17:05:00Z",
+  "amount": 35000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата по счету #118"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1dd"
+  },
+  "transaction_id": 17,
+  "sender_account": 1,
+  "transaction_date": "2026-04-15T09:30:00Z",
+  "amount": 15000,
+  "transaction_type": "-",
+  "receiver_account": 3,
+  "purpose": "Аренда помещения"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1de"
+  },
+  "transaction_id": 18,
+  "sender_account": 1,
+  "transaction_date": "2026-04-16T12:50:00Z",
+  "amount": 7800,
+  "transaction_type": "-",
+  "receiver_account": 11,
+  "purpose": "Курьерские услуги"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1df"
+  },
+  "transaction_id": 19,
+  "sender_account": 8,
+  "transaction_date": "2026-04-17T15:15:00Z",
+  "amount": 95000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата за оказание услуг"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1e0"
+  },
+  "transaction_id": 20,
+  "sender_account": 1,
+  "transaction_date": "2026-04-18T10:10:00Z",
+  "amount": 18500,
+  "transaction_type": "-",
+  "receiver_account": 4,
+  "purpose": "Оплата за ПО"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1e1"
+  },
+  "transaction_id": 21,
+  "sender_account": 9,
+  "transaction_date": "2026-04-19T13:00:00Z",
+  "amount": 21000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Возврат по договору #41-C"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1e2"
+  },
+  "transaction_id": 22,
+  "sender_account": 1,
+  "transaction_date": "2026-04-20T16:30:00Z",
+  "amount": 6400,
+  "transaction_type": "-",
+  "receiver_account": 5,
+  "purpose": "Хозяйственные расходы"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1e3"
+  },
+  "transaction_id": 23,
+  "sender_account": 10,
+  "transaction_date": "2026-04-21T11:55:00Z",
+  "amount": 110000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата по счету #125"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1e4"
+  },
+  "transaction_id": 24,
+  "sender_account": 1,
+  "transaction_date": "2026-04-22T09:45:00Z",
+  "amount": 19800,
+  "transaction_type": "-",
+  "receiver_account": 7,
+  "purpose": "Транспортные услуги"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1e5"
+  },
+  "transaction_id": 25,
+  "sender_account": 1,
+  "transaction_date": "2026-04-23T14:05:00Z",
+  "amount": 24000,
+  "transaction_type": "-",
+  "receiver_account": 3,
+  "purpose": "Оплата за консультацию"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1e6"
+  },
+  "transaction_id": 26,
+  "sender_account": 2,
+  "transaction_date": "2026-04-24T10:25:00Z",
+  "amount": 82000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата по договору поставки"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1e7"
+  },
+  "transaction_id": 27,
+  "sender_account": 1,
+  "transaction_date": "2026-04-25T17:10:00Z",
+  "amount": 33000,
+  "transaction_type": "-",
+  "receiver_account": 8,
+  "purpose": "Маркетинговые исследования"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1e8"
+  },
+  "transaction_id": 28,
+  "sender_account": 4,
+  "transaction_date": "2026-04-26T12:35:00Z",
+  "amount": 47000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата по счету #130"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1e9"
+  },
+  "transaction_id": 29,
+  "sender_account": 1,
+  "transaction_date": "2026-04-27T09:00:00Z",
+  "amount": 9500,
+  "transaction_type": "-",
+  "receiver_account": 9,
+  "purpose": "Оплата за доступ к сервису"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1ea"
+  },
+  "transaction_id": 30,
+  "sender_account": 1,
+  "transaction_date": "2026-04-28T15:40:00Z",
+  "amount": 50000,
+  "transaction_type": "-",
+  "receiver_account": 12,
+  "purpose": "Перевод собственных средств"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1eb"
+  },
+  "transaction_id": 31,
+  "sender_account": 11,
+  "transaction_date": "2026-04-29T11:11:00Z",
+  "amount": 150000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Инвестиционный взнос"
+},
+{
+  "_id": {
+    "$oid": "687542f6648db69b0464b1ec"
+  },
+  "transaction_id": 32,
+  "sender_account": 1,
+  "transaction_date": "2026-04-30T18:00:00Z",
+  "amount": 15000,
+  "transaction_type": "-",
+  "receiver_account": 2,
+  "purpose": "Аренда помещения (следующий месяц)"
+}]

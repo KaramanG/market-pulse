@@ -1,0 +1,540 @@
+[{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b1f7"
+  },
+  "account_number": 1,
+  "date": "2026-04-01T10:15:00Z",
+  "balance": -25000,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b1f8"
+  },
+  "account_number": 3,
+  "date": "2026-04-01T10:15:00Z",
+  "balance": 25000,
+  "owner_name": "Владелец счета 3"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b1f9"
+  },
+  "account_number": 4,
+  "date": "2026-04-02T14:30:00Z",
+  "balance": -50000,
+  "owner_name": "Владелец счета 4"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b1fa"
+  },
+  "account_number": 1,
+  "date": "2026-04-02T14:30:00Z",
+  "balance": 25000,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b1fb"
+  },
+  "account_number": 1,
+  "date": "2026-04-03T09:05:00Z",
+  "balance": 19800,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b1fc"
+  },
+  "account_number": 5,
+  "date": "2026-04-03T09:05:00Z",
+  "balance": 5200,
+  "owner_name": "Владелец счета 5"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b1fd"
+  },
+  "account_number": 2,
+  "date": "2026-04-04T11:20:00Z",
+  "balance": -12000,
+  "owner_name": "Владелец счета 2"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b1fe"
+  },
+  "account_number": 1,
+  "date": "2026-04-04T11:20:00Z",
+  "balance": 31800,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b1ff"
+  },
+  "account_number": 1,
+  "date": "2026-04-05T16:45:00Z",
+  "balance": -118200,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b200"
+  },
+  "account_number": 6,
+  "date": "2026-04-05T16:45:00Z",
+  "balance": 150000,
+  "owner_name": "Владелец счета 6"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b201"
+  },
+  "account_number": 7,
+  "date": "2026-04-06T12:00:00Z",
+  "balance": -75000,
+  "owner_name": "Владелец счета 7"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b202"
+  },
+  "account_number": 1,
+  "date": "2026-04-06T12:00:00Z",
+  "balance": -43200,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b203"
+  },
+  "account_number": 1,
+  "date": "2026-04-07T18:10:00Z",
+  "balance": -52100,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b204"
+  },
+  "account_number": 2,
+  "date": "2026-04-07T18:10:00Z",
+  "balance": -3100,
+  "owner_name": "Владелец счета 2"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b205"
+  },
+  "account_number": 1,
+  "date": "2026-04-08T13:25:00Z",
+  "balance": -82100,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b206"
+  },
+  "account_number": 8,
+  "date": "2026-04-08T13:25:00Z",
+  "balance": 30000,
+  "owner_name": "Владелец счета 8"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b207"
+  },
+  "account_number": 3,
+  "date": "2026-04-09T09:55:00Z",
+  "balance": 7000,
+  "owner_name": "Владелец счета 3"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b208"
+  },
+  "account_number": 1,
+  "date": "2026-04-09T09:55:00Z",
+  "balance": -64100,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b209"
+  },
+  "account_number": 1,
+  "date": "2026-04-10T15:00:00Z",
+  "balance": -109100,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b20a"
+  },
+  "account_number": 9,
+  "date": "2026-04-10T15:00:00Z",
+  "balance": 45000,
+  "owner_name": "Владелец счета 9"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b20b"
+  },
+  "account_number": 1,
+  "date": "2026-04-11T11:40:00Z",
+  "balance": -120300,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b20c"
+  },
+  "account_number": 2,
+  "date": "2026-04-11T11:40:00Z",
+  "balance": 8100,
+  "owner_name": "Владелец счета 2"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b20d"
+  },
+  "account_number": 5,
+  "date": "2026-04-12T10:00:00Z",
+  "balance": -54800,
+  "owner_name": "Владелец счета 5"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b20e"
+  },
+  "account_number": 1,
+  "date": "2026-04-12T10:00:00Z",
+  "balance": -60300,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b20f"
+  },
+  "account_number": 1,
+  "date": "2026-04-13T14:20:00Z",
+  "balance": -82300,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b210"
+  },
+  "account_number": 10,
+  "date": "2026-04-13T14:20:00Z",
+  "balance": 22000,
+  "owner_name": "Владелец счета 10"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b211"
+  },
+  "account_number": 6,
+  "date": "2026-04-14T17:05:00Z",
+  "balance": 115000,
+  "owner_name": "Владелец счета 6"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b212"
+  },
+  "account_number": 1,
+  "date": "2026-04-14T17:05:00Z",
+  "balance": -47300,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b213"
+  },
+  "account_number": 1,
+  "date": "2026-04-15T09:30:00Z",
+  "balance": -62300,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b214"
+  },
+  "account_number": 3,
+  "date": "2026-04-15T09:30:00Z",
+  "balance": 22000,
+  "owner_name": "Владелец счета 3"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b215"
+  },
+  "account_number": 1,
+  "date": "2026-04-16T12:50:00Z",
+  "balance": -70100,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b216"
+  },
+  "account_number": 11,
+  "date": "2026-04-16T12:50:00Z",
+  "balance": 7800,
+  "owner_name": "Владелец счета 11"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b217"
+  },
+  "account_number": 8,
+  "date": "2026-04-17T15:15:00Z",
+  "balance": -65000,
+  "owner_name": "Владелец счета 8"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b218"
+  },
+  "account_number": 1,
+  "date": "2026-04-17T15:15:00Z",
+  "balance": 24900,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b219"
+  },
+  "account_number": 1,
+  "date": "2026-04-18T10:10:00Z",
+  "balance": 6400,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b21a"
+  },
+  "account_number": 4,
+  "date": "2026-04-18T10:10:00Z",
+  "balance": -31500,
+  "owner_name": "Владелец счета 4"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b21b"
+  },
+  "account_number": 9,
+  "date": "2026-04-19T13:00:00Z",
+  "balance": 24000,
+  "owner_name": "Владелец счета 9"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b21c"
+  },
+  "account_number": 1,
+  "date": "2026-04-19T13:00:00Z",
+  "balance": 27400,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b21d"
+  },
+  "account_number": 1,
+  "date": "2026-04-20T16:30:00Z",
+  "balance": 21000,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b21e"
+  },
+  "account_number": 5,
+  "date": "2026-04-20T16:30:00Z",
+  "balance": -48400,
+  "owner_name": "Владелец счета 5"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b21f"
+  },
+  "account_number": 10,
+  "date": "2026-04-21T11:55:00Z",
+  "balance": -88000,
+  "owner_name": "Владелец счета 10"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b220"
+  },
+  "account_number": 1,
+  "date": "2026-04-21T11:55:00Z",
+  "balance": 131000,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b221"
+  },
+  "account_number": 1,
+  "date": "2026-04-22T09:45:00Z",
+  "balance": 111200,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b222"
+  },
+  "account_number": 7,
+  "date": "2026-04-22T09:45:00Z",
+  "balance": -55200,
+  "owner_name": "Владелец счета 7"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b223"
+  },
+  "account_number": 1,
+  "date": "2026-04-23T14:05:00Z",
+  "balance": 87200,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b224"
+  },
+  "account_number": 3,
+  "date": "2026-04-23T14:05:00Z",
+  "balance": 46000,
+  "owner_name": "Владелец счета 3"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b225"
+  },
+  "account_number": 2,
+  "date": "2026-04-24T10:25:00Z",
+  "balance": -73900,
+  "owner_name": "Владелец счета 2"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b226"
+  },
+  "account_number": 1,
+  "date": "2026-04-24T10:25:00Z",
+  "balance": 169200,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b227"
+  },
+  "account_number": 1,
+  "date": "2026-04-25T17:10:00Z",
+  "balance": 136200,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b228"
+  },
+  "account_number": 8,
+  "date": "2026-04-25T17:10:00Z",
+  "balance": -98000,
+  "owner_name": "Владелец счета 8"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b229"
+  },
+  "account_number": 4,
+  "date": "2026-04-26T12:35:00Z",
+  "balance": 15500,
+  "owner_name": "Владелец счета 4"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b22a"
+  },
+  "account_number": 1,
+  "date": "2026-04-26T12:35:00Z",
+  "balance": 183200,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b22b"
+  },
+  "account_number": 1,
+  "date": "2026-04-27T09:00:00Z",
+  "balance": 173700,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b22c"
+  },
+  "account_number": 9,
+  "date": "2026-04-27T09:00:00Z",
+  "balance": 33500,
+  "owner_name": "Владелец счета 9"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b22d"
+  },
+  "account_number": 1,
+  "date": "2026-04-28T15:40:00Z",
+  "balance": 123700,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b22e"
+  },
+  "account_number": 12,
+  "date": "2026-04-28T15:40:00Z",
+  "balance": 50000,
+  "owner_name": "Владелец счета 12"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b22f"
+  },
+  "account_number": 11,
+  "date": "2026-04-29T11:11:00Z",
+  "balance": -142200,
+  "owner_name": "Владелец счета 11"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b230"
+  },
+  "account_number": 1,
+  "date": "2026-04-29T11:11:00Z",
+  "balance": 273700,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b231"
+  },
+  "account_number": 1,
+  "date": "2026-04-30T18:00:00Z",
+  "balance": 258700,
+  "owner_name": "Владелец счета 1"
+},
+{
+  "_id": {
+    "$oid": "68754aaf648db69b0464b232"
+  },
+  "account_number": 2,
+  "date": "2026-04-30T18:00:00Z",
+  "balance": -58900,
+  "owner_name": "Владелец счета 2"
+}]
