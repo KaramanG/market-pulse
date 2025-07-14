@@ -7,54 +7,63 @@ const port = 5000;
 
 // --- НАСТРОЙКИ ПОДКЛЮЧЕНИЯ ---
 const uri = "mongodb://localhost:27017";
-const dbName = "market-pulse";
-const collectionName = "transactions";
+const dbName = "market-pulse"; 
+// Меняем коллекцию на новую!
+const collectionName = "account_history"; 
 
 const client = new MongoClient(uri);
 
-app.use(cors()); // Разрешаем запросы (например, с localhost:5173)
+app.use(cors());
 
 async function run() {
   try {
     await client.connect();
     console.log("Успешно подключились к MongoDB!");
     const database = client.db(dbName);
-    const transactions = database.collection(collectionName);
+    const accountHistory = database.collection(collectionName);
 
-    // Создаем эндпоинт, на который будет обращаться React
-    // GET http://localhost:5000/api/chart-data
-    app.get('/api/chart-data', async (req, res) => {
+    // НОВЫЙ ЭНДПОИНТ: принимает номер счета в URL
+    // Например: GET http://localhost:5000/api/account-history/1
+    app.get('/api/account-history/:accountNumber', async (req, res) => {
       try {
-        // Используем Aggregation Framework для группировки данных
+        // Получаем номер счета из параметров URL и преобразуем в число
+        const accountNumber = parseInt(req.params.accountNumber);
+
+        // Проверяем, что номер счета - это число
+        if (isNaN(accountNumber)) {
+          return res.status(400).send("Номер счета должен быть числом.");
+        }
+
+        // Запрос стал гораздо проще!
         const pipeline = [
           {
-            // 1. Группируем документы по дате (без времени) и суммируем amount
-            $group: {
-                _id: { $dateToString: { format: "%Y-%m-%d", date: { $toDate: "$transaction_date" } } },
-                totalValue: { $sum: "$amount" }
+            // 1. Находим все записи для конкретного счета
+            $match: {
+              account_number: accountNumber
             }
           },
           {
-            // 2. Преобразуем поля в формат, который нужен для Recharts
-            $project: {
-              _id: 0, // убираем поле _id
-              name: "$_id", // переименовываем _id в name
-              value: "$totalValue" // переименовываем totalValue в value
-            }
-          },
-          {
-            // 3. Сортируем по дате для красивого графика
+            // 2. Сортируем по дате, чтобы линия на графике шла правильно
             $sort: {
-              name: 1
+              date: 1 // 1 = по возрастанию
+            }
+          },
+          {
+            // 3. Преобразуем поля в формат, который нужен для Recharts
+            $project: {
+                _id: 0,
+                name: { $dateToString: { format: "%Y-%m-%d", date: { $toDate: "$date" } } },
+                value: "$balance"
             }
           }
         ];
         
-        const chartData = await transactions.aggregate(pipeline).toArray();
+        const chartData = await accountHistory.aggregate(pipeline).toArray();
         res.json(chartData);
 
       } catch (error) {
-        res.status(500).send("Ошибка при агрегации данных: " + error);
+        console.error("ОШИБКА ПОЛУЧЕНИЯ ИСТОРИИ СЧЕТА:", error);
+        res.status(500).send("Ошибка при получении истории счета: " + error);
       }
     });
 

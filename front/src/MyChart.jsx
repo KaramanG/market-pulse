@@ -15,9 +15,9 @@ function MyChart() {
     // Асинхронная функция для получения данных
     const fetchData = async () => {
       try {
-        // Делаем GET-запрос к нашему API
-        const response = await axios.get('http://localhost:5000/api/chart-data');
-        setChartData(response.data); // Сохраняем данные в состояние
+        // Изменяем URL, чтобы запросить историю счета №2
+        const response = await axios.get('http://localhost:5000/api/account-history/1');
+        setChartData(response.data);
       } catch (err) {
         console.error("Ошибка при получении данных:", err);
         setError("Не удалось загрузить данные для графика.");
