@@ -145,7 +145,7 @@ html, body {
 /* График */
 .chart-box {
   background: transparent; /* прозрачный фон */
-  height: 300px;
+  height: 500px;
   display: flex;
   align-items: center;
   justify-content: center;
