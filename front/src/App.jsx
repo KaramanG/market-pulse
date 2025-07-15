@@ -3,21 +3,22 @@ import './styles/index.css';
 import MyChart from './MyChart';
 
 function App() {
-  // Состояние для хранения индекса активной вкладки
   const [activeTab, setActiveTab] = useState(0);
-
-  // Массив вкладок для удобства
   const tabs = ['Кассовые разрывы', 'Прогнозирование', 'События'];
 
   return (
     <div className="app-container">
       <header className="app-header" role="banner">
-        <div className="sidebar-logo">
-          <img src="/img/alfa.svg" alt="Логотип Альфа-Бизнес" />
-          <span className="brand-name">Альфа-Бизнес</span>
+        {/* ИЗМЕНЕНИЕ: Логотип обернут в контейнер для балансировки */}
+        <div className="header-left">
+          <div className="sidebar-logo">
+            <img src="/img/alfa.svg" alt="Логотип Альфа-Бизнес" />
+            <span className="brand-name">Альфа-Бизнес</span>
+          </div>
         </div>
 
-        <div className="page-header">
+        {/* ИЗМЕНЕНИЕ: Поиск теперь находится в центральной части хедера */}
+        <div className="header-center">
           <div className="search-wrapper" role="search">
             <input
               className="search"
@@ -27,6 +28,9 @@ function App() {
             />
           </div>
         </div>
+        
+        {/* ИЗМЕНЕНИЕ: Пустой блок справа для идеального центрирования поиска */}
+        <div className="header-right"></div>
       </header>
 
       <div className="content-area">
@@ -45,7 +49,7 @@ function App() {
             <li><a href="#">Контрагенты</a></li>
           </ul>
         </aside>
-
+        
         <main className="main-section main-grid">
           <div className="page-content">
             <section className="filters" aria-label="Фильтры данных">
@@ -63,7 +67,7 @@ function App() {
                 <option value="payments">Даты платежей</option>
               </select>
             </section>
-
+            
             <section className="view-switcher-section" aria-label="Переключатель вида">
               <h2 className="view-title">Обзор</h2>
               <nav className="tabs-nav">
@@ -79,16 +83,9 @@ function App() {
                 ))}
               </nav>
             </section>
-
+            
             <section className="chart-section" aria-label="Финансовая аналитика">
               <div className="chart-box">
-                {/* 
-                  Пока что всегда отображается MyChart.
-                  В будущем здесь будет логика для смены компонентов:
-                  {activeTab === 0 && <CashGapsComponent />}
-                  {activeTab === 1 && <ForecastingComponent />}
-                  ...и так далее
-                */}
                 <MyChart />
               </div>
             </section>

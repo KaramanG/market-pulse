@@ -1,44 +1,42 @@
-/* Подключение шрифта Alfa Slab One */
-@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
-
 html, body {
   margin: 0;
   height: 100%;
-  background-color: #f3f3f3; /* общий фон страницы */
-  font-family: Arial, sans-serif; /* базовый шрифт */
+  background-color: #f3f3f3;
+  /* Используем стандартный шрифт, пока вы не подключите свой */
+  font-family: Arial, sans-serif;
 }
 
 .app-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: transparent; /* не перекрывать фон body */
+  background-color: transparent;
 }
 
-/* Хедер в одну строку */
 .app-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
-  background: transparent; /* прозрачный фон */
+  background: transparent;
   height: 60px;
   gap: 2rem;
   border-bottom: 1px solid #ccc;
 }
 
-/* Логотип и название */
-.sidebar-logo {
+.header-left, .header-right {
+  flex: 1;
+}
+.header-center {
+  flex: 2;
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
 }
 
 .sidebar-logo img {
   height: 32px;
 }
 
-/* Применяем шрифт Alfa Slab One к названию */
 .brand-name {
   font-family: 'Alfa Slab One', serif;
   font-size: 32px;
@@ -46,89 +44,62 @@ html, body {
   margin: 0;
 }
 
-/* Заголовок и поиск */
-.page-header {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  flex: 1;
-  justify-content: space-between;
-}
-
-/* Поиск без формы */
-.search-wrapper {
-  display: flex;
-}
-
 .search {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  width: 200px;
-  background-color: white; /* чтобы поле поиска было видно */
+  width: 300px;
+  background-color: white;
 }
 
-/* Контент: сайдбар и основная часть */
 .content-area {
   display: flex;
   flex: 1;
   overflow: hidden;
 }
 
-/* Сайдбар растягивается на всю высоту окна */
 .sidebar {
-  width: 220px;
-  background: transparent; /* прозрачный фон */
+  width: 240px;
+  background: transparent;
   padding: 1rem;
   overflow-y: auto;
-  height: 100vh;
   box-sizing: border-box;
+  border-right: 1px solid #e0e0e0;
 }
 
-/* Убираем маркеры и отступы списка */
 .sidebar-menu {
   list-style: none;
   margin: 0;
   padding: 0;
+  padding-top: 1rem;
 }
 
-/* Ссылки без подчеркивания, с паддингом и плавным эффектом */
 .sidebar-menu a {
   text-decoration: none;
   color: inherit;
   display: block;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: background-color 0.2s ease;
-  outline-offset: 2px;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  outline: none; /* Убираем синий outline, так как будет яркое выделение */
 }
 
-/* При наведении */
-.sidebar-menu a:hover {
-  background-color: #d0d0d0;
-}
-
-/* При фокусе — выделяем более легким цветом и показываем outline для доступности */
-.sidebar-menu a:focus {
-  background-color: #e0e0e0;
-  outline: 2px solid #0078d7;
-}
-
-/* При нажатии — более темный фон */
+/* Стили для выделения пунктов меню красным на белом фоне */
+.sidebar-menu a:hover,
+.sidebar-menu a:focus-visible,
 .sidebar-menu a:active {
-  background-color: #b0b0b0;
+  background-color: #D73326; /* Фирменный красный фон */
+  color: #ffffff;           /* Белый текст */
 }
 
-/* Основная часть — семантический тег main */
 .main-section {
   flex: 1;
-  padding: 1rem;
+  padding: 2rem;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
 
-/* Основной контейнер для контента и других элементов */
 .main-grid {
   display: flex;
   gap: 1rem;
@@ -139,15 +110,14 @@ html, body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
 }
 
-/* --- СТИЛИ ДЛЯ ВЫПАДАЮЩИХ СПИСКОВ (ФИЛЬТРЫ) --- */
+/* Стили для фильтров */
 .filters {
   display: flex;
   gap: 8px;
 }
-
 .filter-select {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -155,7 +125,7 @@ html, body {
   border: none;
   padding: 10px 32px 10px 16px;
   border-radius: 20px;
-  background-color: #D8DDE0; 
+  background-color: #D8DDE0;
   color: #000;
   font-size: 14px;
   cursor: pointer;
@@ -165,37 +135,32 @@ html, body {
   background-position: right 12px center;
   background-size: 12px;
 }
-
 .filters:not(:has(.filter-select:focus)) .filter-select:first-child,
 .filter-select:focus {
   background-color: #2b2d31;
   color: #fff;
   background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"><path fill="%23fff" d="M1.41.59L6 5.17 10.59.59 12 2l-6 6-6-6z"/></svg>');
 }
-
 .filter-select::-ms-expand {
   display: none;
 }
-
 .filter-select option {
   background-color: #ffffff;
   color: #000000;
 }
 
-/* --- СТИЛИ ДЛЯ ПЕРЕКЛЮЧАТЕЛЯ ВИДОВ (ТАБЫ) --- */
+/* Стили для табов */
 .view-switcher-section {
   display: flex;
   align-items: center;
   gap: 16px;
 }
-
 .view-title {
   font-size: 32px;
   font-weight: 800;
   margin: 0;
   line-height: 1;
 }
-
 .tabs-nav {
   display: flex;
   align-items: center;
@@ -203,7 +168,6 @@ html, body {
   border-radius: 20px;
   padding: 4px;
 }
-
 .tab-button {
   border: none;
   background: transparent;
@@ -215,7 +179,6 @@ html, body {
   transition: all 0.2s ease-in-out;
   position: relative;
 }
-
 .tab-button + .tab-button::before {
   content: '';
   position: absolute;
@@ -226,27 +189,26 @@ html, body {
   height: 16px;
   background-color: #C2C7CF;
 }
-
 .tab-button.active {
   background-color: #fff;
   color: #000;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* --- СТИЛИ ДЛЯ ГРАФИКА И ДРУГИХ ЭЛЕМЕНТОВ --- */
+/* Стили для графика */
+.chart-section {
+  /* Убрано свойство `flex: 1`, которое заставляло блок растягиваться */
+  display: flex;
+}
+
 .chart-box {
-  background: transparent;
-  height: 500px;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.notification {
-  width: 250px;
-  padding: 1rem;
-  background: transparent;
-  border-left: 4px solid #ffc107;
-  height: 100%;
-  box-sizing: border-box;
+  border: 1px solid #E6E8EB;
 }
