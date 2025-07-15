@@ -1,7 +1,14 @@
+import { useState } from 'react';
 import './styles/index.css';
 import MyChart from './MyChart';
 
 function App() {
+  // Состояние для хранения индекса активной вкладки
+  const [activeTab, setActiveTab] = useState(0);
+
+  // Массив вкладок для удобства
+  const tabs = ['Кассовые разрывы', 'Прогнозирование', 'События'];
+
   return (
     <div className="app-container">
       <header className="app-header" role="banner">
@@ -42,15 +49,46 @@ function App() {
         <main className="main-section main-grid">
           <div className="page-content">
             <section className="filters" aria-label="Фильтры данных">
-              <button className="period-button" aria-haspopup="listbox" aria-expanded="false">
-                Период: <span className="selected-value">День</span>
-                <span className="arrow">▼</span>
-              </button>
+              <select className="filter-select">
+                <option value="day">Период: день</option>
+                <option value="week">Период: неделя</option>
+                <option value="month">Период: месяц</option>
+              </select>
+              <select className="filter-select">
+                <option value="scheduled">Запланированные счета</option>
+                <option value="paid">Оплаченные счета</option>
+              </select>
+              <select className="filter-select">
+                <option value="gaps">Даты разрывов</option>
+                <option value="payments">Даты платежей</option>
+              </select>
+            </section>
+
+            <section className="view-switcher-section" aria-label="Переключатель вида">
+              <h2 className="view-title">Обзор</h2>
+              <nav className="tabs-nav">
+                {tabs.map((tabName, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className={`tab-button ${activeTab === index ? 'active' : ''}`}
+                    onClick={() => setActiveTab(index)}
+                  >
+                    {tabName}
+                  </button>
+                ))}
+              </nav>
             </section>
 
             <section className="chart-section" aria-label="Финансовая аналитика">
-              <h2 className="visually-hidden">График финансовых показателей</h2>
               <div className="chart-box">
+                {/* 
+                  Пока что всегда отображается MyChart.
+                  В будущем здесь будет логика для смены компонентов:
+                  {activeTab === 0 && <CashGapsComponent />}
+                  {activeTab === 1 && <ForecastingComponent />}
+                  ...и так далее
+                */}
                 <MyChart />
               </div>
             </section>
