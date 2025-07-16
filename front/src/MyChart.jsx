@@ -1,18 +1,50 @@
-import { useState, useEffect, useMemo } from 'react'; // Добавляем useMemo
+import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'; // Меняем LineChart на AreaChart и Line на Area
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Label } from 'recharts';
 
-// Функции-форматтеры остаются без изменений
+// --- НАЧАЛО: Кастомный компонент для красивой всплывающей подсказки ---
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    const value = payload[0].value;
+    const date = new Date(label);
+    const formattedDate = date.toLocaleDateString('ru-RU', { day: '2-digit', month: 'long', year: 'numeric' });
+    const formattedValue = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', minimumFractionDigits: 0 }).format(value);
+
+    return (
+      <div style={{
+        backgroundColor: '#fff',
+        border: '1px solid #ccc',
+        padding: '10px 15px',
+        borderRadius: '8px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+      }}>
+        <p style={{ margin: 0, color: '#666', fontSize: '12px' }}>{formattedDate}</p>
+        <p style={{
+          margin: '4px 0 0',
+          color: value >= 0 ? '#2e8b57' : '#d9534f', // Зеленый для плюса, красный для минуса
+          fontSize: '16px',
+          fontWeight: 'bold'
+        }}>{formattedValue}</p>
+      </div>
+    );
+  }
+  return null;
+};
+// --- КОНЕЦ: Кастомный компонент для всплывающей подсказки ---
+
+
+// Функции-форматтеры для осей
 const formatDate = (dateString) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString('ru-RU', { day: '2-digit', month: 'long' });
+  return date.toLocaleDateString('ru-RU', { day: '2-digit', month: 'short' });
 };
 
 const formatValue = (value) => {
   if (value === 0) return '0';
   const thousands = value / 1000;
-  return `${thousands.toFixed(1).replace('.0', '')} тыс.`;
+  return `${Math.round(thousands)} тыс.`;
 };
+
 
 function MyChart() {
   const [chartData, setChartData] = useState([]);
@@ -34,28 +66,14 @@ function MyChart() {
     fetchData();
   }, []);
 
-  // --- НОВЫЙ БЛОК: Вычисляем точку для смены цвета градиента ---
-  // useMemo кэширует результат, чтобы не пересчитывать на каждый рендер
+  // Вычисляем точку для смены цвета градиента
   const gradientOffset = useMemo(() => {
-    if (chartData.length === 0) {
-      return 0.5; // Значение по умолчанию, если данных нет
-    }
-
+    if (!chartData || chartData.length === 0) return 0.5;
     const dataValues = chartData.map((i) => i.value);
     const maxValue = Math.max(...dataValues);
     const minValue = Math.min(...dataValues);
-    
-    // Если все значения одинаковые, градиент не нужен
-    if (maxValue === minValue) {
-        return maxValue >= 0 ? 1 : 0;
-    }
-    
-    // Если все значения положительные или нулевые, весь градиент синий
-    if (minValue >= 0) {
-        return 1;
-    }
-    
-    // Рассчитываем, на какой доле высоты графика находится нулевая отметка
+    if (maxValue === minValue) return maxValue >= 0 ? 1 : 0;
+    if (minValue >= 0) return 1;
     return maxValue / (maxValue - minValue);
   }, [chartData]);
 
@@ -64,51 +82,55 @@ function MyChart() {
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
 
   return (
-    <ResponsiveContainer width="90%" height={500}>
-      {/* Используем AreaChart вместо LineChart */}
+    <ResponsiveContainer width="100%" height={500}>
       <AreaChart 
         data={chartData} 
-        margin={{ top: 30, right: 20, bottom: 40, left: 20 }}
+        margin={{ top: 20, right: 30, bottom: 50, left: 20 }}
       >
-        {/* --- НОВЫЙ БЛОК: Определяем наш градиент --- */}
         <defs>
           <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
-            {/* 
-              Цвет для положительных значений. 
-              offset - это точка, где цвет заканчивается. Мы ее рассчитали.
-            */}
-            <stop offset={gradientOffset} stopColor="#0078d7" stopOpacity={0.8}/>
-            {/* 
-              Цвет для отрицательных значений.
-              Начинается в той же точке и идет до конца.
-              Можно использовать красный цвет для наглядности: stopColor="#ff4d4f"
-            */}
-            <stop offset={gradientOffset} stopColor="#0078d7" stopOpacity={0.8}/>
+            <stop offset={gradientOffset} stopColor="#0078d7" stopOpacity={0.6}/>
+            <stop offset={gradientOffset} stopColor="#d9534f" stopOpacity={0.6}/>
           </linearGradient>
         </defs>
 
-        <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+        <CartesianGrid stroke="#e0e0e0" strokeDasharray="3 3" />
         
         <XAxis 
           dataKey="name" 
           tickFormatter={formatDate} 
-          tick={{ fontSize: 12, angle: -30, textAnchor: 'end' }} 
+          tick={{ fontSize: 12, fill: '#666' }} 
+          angle={-35} 
+          textAnchor="end"
+          axisLine={false}
+          tickLine={false}
+          dy={10}
         />
         
-        <YAxis tickFormatter={formatValue} />
-        
-        <Tooltip 
-          formatter={(value) => [formatValue(value), 'Баланс']}
-          labelFormatter={formatDate}
+        <YAxis 
+          tickFormatter={formatValue} 
+          tick={{ fontSize: 12, fill: '#666' }}
+          axisLine={false}
+          tickLine={false}
+          dx={-5}
         />
         
-        {/* --- Используем Area вместо Line --- */}
+        <Tooltip content={<CustomTooltip />} />
+        
+        <ReferenceLine y={0} stroke="#666" strokeWidth={1} strokeDasharray="3 3">
+          <Label value="0" offset={10} position="insideTopLeft" fill="#666" fontSize={12} />
+        </ReferenceLine>
+        
         <Area 
           type="monotone" 
           dataKey="value" 
-          stroke="#0078d7"   // Цвет самой линии
+          stroke="#005a9e"
           strokeWidth={2}
-          fill="url(#splitColor)" // Применяем наш градиент в качестве заливки
+          fill="url(#splitColor)"
+          // Добавляем стилизованные точки для каждого дня
+          dot={{ r: 3, stroke: '#fff', strokeWidth: 1, fill: '#005a9e' }}
+          // Точка при наведении остается больше для лучшей интерактивности
+          activeDot={{ r: 6, stroke: '#fff', strokeWidth: 2 }}
         />
       </AreaChart>
     </ResponsiveContainer>
