@@ -1,0 +1,34 @@
+
+function ChartFilters({ period, setPeriod, selectedMonth, setSelectedMonth }) {
+  return (
+    <section className="filters" aria-label="Фильтры данных">
+      <select 
+        className="filter-select"
+        value={period}
+        onChange={(e) => setPeriod(e.target.value)}
+      >
+        <option value="week">Период: неделя</option>
+        <option value="month">Период: месяц</option>
+        <option value="year">Период: год</option>
+      </select>
+      {period === 'month' && (
+        <input
+          type="month"
+          className="filter-select"
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(e.target.value)}
+        />
+      )}
+      <select className="filter-select">
+        <option value="scheduled">Запланированные счета</option>
+        <option value="paid">Оплаченные счета</option>
+      </select>
+      <select className="filter-select">
+        <option value="gaps">Даты разрывов</option>
+        <option value="payments">Даты платежей</option>
+      </select>
+    </section>
+  );
+}
+
+export default ChartFilters;

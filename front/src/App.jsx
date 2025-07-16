@@ -1,23 +1,31 @@
 import { useState } from 'react';
 import './styles/index.css';
 import MyChart from './components/MyChart';
+import ChartFilters from './components/ChartFilters';
+
+const getCurrentMonth = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  return `${year}-${month}`;
+};
 
 function App() {
   const [activeTab, setActiveTab] = useState(0);
   const tabs = ['Кассовые разрывы', 'Прогнозирование', 'События'];
+  
+  const [period, setPeriod] = useState('now');
+  const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
 
   return (
     <div className="app-container">
       <header className="app-header" role="banner">
-        {/* ИЗМЕНЕНИЕ: Логотип обернут в контейнер для балансировки */}
         <div className="header-left">
           <div className="sidebar-logo">
             <img src="/img/alfa.svg" alt="Логотип Альфа-Бизнес" />
             <span className="brand-name">Альфа-Бизнес</span>
           </div>
         </div>
-
-        {/* ИЗМЕНЕНИЕ: Поиск теперь находится в центральной части хедера */}
         <div className="header-center">
           <div className="search-wrapper" role="search">
             <input
@@ -28,8 +36,6 @@ function App() {
             />
           </div>
         </div>
-        
-        {/* ИЗМЕНЕНИЕ: Пустой блок справа для идеального центрирования поиска */}
         <div className="header-right"></div>
       </header>
 
@@ -68,25 +74,16 @@ function App() {
               </nav>
             </section>
 
-            <section className="filters" aria-label="Фильтры данных">
-              <select className="filter-select">
-                <option value="day">Период: день</option>
-                <option value="week">Период: неделя</option>
-                <option value="month">Период: месяц</option>
-              </select>
-              <select className="filter-select">
-                <option value="scheduled">Запланированные счета</option>
-                <option value="paid">Оплаченные счета</option>
-              </select>
-              <select className="filter-select">
-                <option value="gaps">Даты разрывов</option>
-                <option value="payments">Даты платежей</option>
-              </select>
-            </section>
+            <ChartFilters 
+              period={period}
+              setPeriod={setPeriod}
+              selectedMonth={selectedMonth}
+              setSelectedMonth={setSelectedMonth}
+            />
             
             <section className="chart-section" aria-label="Финансовая аналитика">
               <div className="chart-box">
-                <MyChart />
+                <MyChart period={period} selectedMonth={selectedMonth} />
               </div>
             </section>
           </div>
