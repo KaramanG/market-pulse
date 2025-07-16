@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './styles/index.css';
-import MyChart from './MyChart';
+import MyChart from './components/MyChart';
 
 function App() {
   const [activeTab, setActiveTab] = useState(0);
