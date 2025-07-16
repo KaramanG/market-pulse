@@ -1,9 +1,29 @@
+
+@font-face {
+  font-family: 'Styrene A LC';
+  src: url('../fonts/styrenealc-regular.woff2') format('woff2'),
+       url('../fonts/styrenealc-regular.ttf') format('truetype'),
+       url('../fonts/styrenealc-regular.svg#styrenealc-regular') format('svg');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Styrene A LC';
+  src: url('../fonts/styrenealc-bold.woff2') format('woff2'),
+       url('../fonts/styrenealc-bold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+
 html, body {
   margin: 0;
   height: 100%;
   background-color: #f3f3f3;
-  /* Используем стандартный шрифт, пока вы не подключите свой */
-  font-family: Arial, sans-serif;
+  font-family: 'Styrene A LC', Arial, sans-serif;
 }
 
 .app-container {
@@ -38,13 +58,14 @@ html, body {
 }
 
 .brand-name {
-  font-family: 'Alfa Slab One', serif;
   font-size: 32px;
   font-weight: 700;
   margin: 0;
 }
 
 .search {
+  font-family: inherit;
+  font-size: 14px;
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -81,15 +102,14 @@ html, body {
   padding: 0.8rem 1rem;
   border-radius: 6px;
   transition: background-color 0.2s ease, color 0.2s ease;
-  outline: none; /* Убираем синий outline, так как будет яркое выделение */
+  outline: none;
 }
 
-/* Стили для выделения пунктов меню красным на белом фоне */
 .sidebar-menu a:hover,
 .sidebar-menu a:focus-visible,
 .sidebar-menu a:active {
-  background-color: #D73326; /* Фирменный красный фон */
-  color: #ffffff;           /* Белый текст */
+  background-color: #D73326;
+  color: #ffffff;
 }
 
 .main-section {
@@ -113,12 +133,13 @@ html, body {
   gap: 2rem;
 }
 
-/* Стили для фильтров */
 .filters {
   display: flex;
   gap: 8px;
 }
+
 .filter-select {
+  font-family: inherit;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -135,6 +156,7 @@ html, body {
   background-position: right 12px center;
   background-size: 12px;
 }
+
 .filters:not(:has(.filter-select:focus)) .filter-select:first-child,
 .filter-select:focus {
   background-color: #2b2d31;
@@ -149,26 +171,30 @@ html, body {
   color: #000000;
 }
 
-/* Стили для табов */
 .view-switcher-section {
   display: flex;
   align-items: center;
   gap: 16px;
 }
+
 .view-title {
+  font-family: inherit;
   font-size: 32px;
   font-weight: 800;
   margin: 0;
   line-height: 1;
 }
+
 .tabs-nav {
   display: flex;
   align-items: center;
-  background-color: #E6E8EB;
+  background-color: #D8DDE0;
   border-radius: 20px;
   padding: 4px;
 }
+
 .tab-button {
+  font-family: inherit;
   border: none;
   background: transparent;
   padding: 8px 16px;
@@ -179,6 +205,7 @@ html, body {
   transition: all 0.2s ease-in-out;
   position: relative;
 }
+
 .tab-button + .tab-button::before {
   content: '';
   position: absolute;
@@ -195,9 +222,7 @@ html, body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Стили для графика */
 .chart-section {
-  /* Убрано свойство `flex: 1`, которое заставляло блок растягиваться */
   display: flex;
 }
 
@@ -211,4 +236,5 @@ html, body {
   align-items: center;
   justify-content: center;
   border: 1px solid #E6E8EB;
+  font-family: Arial, Helvetica, sans-serif;
 }
