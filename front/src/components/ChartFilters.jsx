@@ -21,10 +21,6 @@ function ChartFilters({ period, setPeriod, selectedMonth, setSelectedMonth, onSc
       <button type="button" className="filter-select" onClick={onScheduleClick}>
         Запланированные счета
       </button>
-      <select className="filter-select">
-        <option value="gaps">Даты разрывов</option>
-        <option value="payments">Даты платежей</option>
-      </select>
     </section>
   );
 }
