@@ -24,7 +24,7 @@ function App() {
       <header className="app-header" role="banner">
         <div className="header-left">
           <div className="sidebar-logo">
-            <img src="/img/alfa.svg" alt="Логотип Альфа-Бизнес" />
+            <img src="/img/alfa.svg" alt="Логотип Альфа-Бизнес" className='brand-logo' />
             <span className="brand-name">Альфа-Бизнес</span>
           </div>
         </div>

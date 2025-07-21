@@ -13,7 +13,7 @@
   font-family: 'Styrene A LC';
   src: url('../fonts/styrenealc-bold.woff2') format('woff2'),
        url('../fonts/styrenealc-bold.ttf') format('truetype');
-  font-weight: 800;
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
@@ -61,6 +61,11 @@ html, body {
   font-size: 32px;
   font-weight: 700;
   margin: 0;
+  margin-left: 20px;
+}
+
+.brand-logo {
+  border-radius: 10px;
 }
 
 .search {
