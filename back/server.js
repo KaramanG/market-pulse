@@ -11,6 +11,7 @@ const dbName = "market-pulse";
 const client = new MongoClient(uri);
 
 app.use(cors());
+app.use(express.json());
 
 async function run() {
   try {
@@ -19,79 +20,57 @@ async function run() {
     const database = client.db(dbName);
     const transactions = database.collection("transactions");
     const accounts = database.collection("accounts");
+    const planned_payments = database.collection("planned_payments");
 
-    // Эндпоинт остался прежним, но логика внутри полностью новая
-    // GET http://localhost:5000/api/account-history/1
+    // Обработка модального окна
+    app.post('/api/planned-payments', async (req, res) => {
+      try {
+        console.log("-> Получен POST-запрос на /api/planned-payments"); // Отладочное сообщение
+        const { payment_date, amount, purpose } = req.body;
+        
+        if (!payment_date || !amount || !purpose) {
+          return res.status(400).send("Все поля обязательны.");
+        }
+
+        const newPayment = {
+          payment_date: new Date(payment_date),
+          amount: parseFloat(amount),
+          purpose: purpose,
+          creation_date: new Date(),
+          user_id: 1
+        };
+
+        const result = await planned_payments.insertOne(newPayment);
+        console.log("   Данные успешно сохранены в MongoDB:", result.insertedId);
+        res.status(201).json(result);
+
+      } catch (error) {
+        console.error("ОШИБКА СОЗДАНИЯ ПЛАНОВОГО ПЛАТЕЖА:", error);
+        res.status(500).send("Ошибка на сервере при создании платежа.");
+      }
+    });
+
+    // Обработка запроса для графика
     app.get('/api/account-history/:accountNumber', async (req, res) => {
       try {
         const accountNumber = parseInt(req.params.accountNumber);
         if (isNaN(accountNumber)) {
           return res.status(400).send("Номер счета должен быть числом.");
         }
-
-        // --- 1. Получаем начальный баланс ---
         const accountInfo = await accounts.findOne({ account_number: accountNumber });
         const initialBalance = accountInfo ? accountInfo.initial_balance : 0;
-        
-        // --- 2. Сложный pipeline для вычисления истории ---
         const pipeline = [
-          // Этап I: Создаем два документа из каждой транзакции (списание и зачисление)
-          {
-            $project: {
-              transactions: [
-                {
-                  account: "$sender_account",
-                  date: { $toDate: "$transaction_date" },
-                  change: { $multiply: ["$amount", -1] } // списание
-                },
-                {
-                  account: "$receiver_account",
-                  date: { $toDate: "$transaction_date" },
-                  change: "$amount" // зачисление
-                }
-              ]
-            }
-          },
-          // Этап II: "Разворачиваем" массив в отдельные документы
+          { $project: { transactions: [ { account: "$sender_account", date: { $toDate: "$transaction_date" }, change: { $multiply: ["$amount", -1] } }, { account: "$receiver_account", date: { $toDate: "$transaction_date" }, change: "$amount" } ]}},
           { $unwind: "$transactions" },
-          // Этап III: Заменяем корень документа на содержимое поля transactions
           { $replaceRoot: { newRoot: "$transactions" } },
-          // Этап IV: Выбираем операции только для нужного нам счета
           { $match: { account: accountNumber } },
-          // Этап V: Группируем по дням и считаем итоговое изменение за день
-          {
-            $group: {
-              _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
-              daily_change: { $sum: "$change" }
-            }
-          },
-          // Этап VI: Сортируем по дате
+          { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } }, daily_change: { $sum: "$change" }}},
           { $sort: { _id: 1 } },
-          // Этап VII: Вычисляем накопительный итог (баланс на конец дня)
-          {
-            $setWindowFields: {
-              sortBy: { _id: 1 },
-              output: {
-                running_balance: {
-                  $sum: "$daily_change",
-                  window: { documents: [ "unbounded", "current" ] }
-                }
-              }
-            }
-          },
-          // Этап VIII: Финальная подготовка для графика
-          {
-            $project: {
-              _id: 0,
-              name: "$_id", // Дата
-              value: { $add: [initialBalance, "$running_balance"] } // Баланс = начальный + накопленные изменения
-            }
-          }
+          { $setWindowFields: { sortBy: { _id: 1 }, output: { running_balance: { $sum: "$daily_change", window: { documents: [ "unbounded", "current" ] }}}}},
+          { $project: { _id: 0, name: "$_id", value: { $add: [initialBalance, "$running_balance"] }}}
         ];
-
         const chartData = await transactions.aggregate(pipeline).toArray();
         res.json(chartData);
-
       } catch (error) {
         console.error("ОШИБКА ВЫЧИСЛЕНИЯ ИСТОРИИ:", error);
         res.status(500).send("Ошибка при вычислении истории счета: " + error);
