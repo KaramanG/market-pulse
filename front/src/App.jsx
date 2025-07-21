@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './styles/index.css';
 import MyChart from './components/MyChart';
 import ChartFilters from './components/ChartFilters';
+import SchedulePaymentModal from './components/SchedulePaymentModal';
 
 const getCurrentMonth = () => {
   const now = new Date();
@@ -16,6 +17,7 @@ function App() {
   
   const [period, setPeriod] = useState('now');
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="app-container">
@@ -79,8 +81,9 @@ function App() {
               setPeriod={setPeriod}
               selectedMonth={selectedMonth}
               setSelectedMonth={setSelectedMonth}
+              onScheduleClick={() => setIsModalOpen(true)}
             />
-            
+      
             <section className="chart-section" aria-label="Финансовая аналитика">
               <div className="chart-box">
                 <MyChart period={period} selectedMonth={selectedMonth} />
@@ -89,6 +92,11 @@ function App() {
           </div>
         </main>
       </div>
+
+      <SchedulePaymentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }

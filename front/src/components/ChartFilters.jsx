@@ -1,5 +1,4 @@
-
-function ChartFilters({ period, setPeriod, selectedMonth, setSelectedMonth }) {
+function ChartFilters({ period, setPeriod, selectedMonth, setSelectedMonth, onScheduleClick }) {
   return (
     <section className="filters" aria-label="Фильтры данных">
       <select 
@@ -19,10 +18,9 @@ function ChartFilters({ period, setPeriod, selectedMonth, setSelectedMonth }) {
           onChange={(e) => setSelectedMonth(e.target.value)}
         />
       )}
-      <select className="filter-select">
-        <option value="scheduled">Запланированные счета</option>
-        <option value="paid">Оплаченные счета</option>
-      </select>
+      <button type="button" className="filter-select" onClick={onScheduleClick}>
+        Запланированные счета
+      </button>
       <select className="filter-select">
         <option value="gaps">Даты разрывов</option>
         <option value="payments">Даты платежей</option>
