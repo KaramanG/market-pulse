@@ -3,6 +3,7 @@ import './styles/index.css';
 import MyChart from './components/MyChart';
 import ChartFilters from './components/ChartFilters';
 import SchedulePaymentModal from './components/SchedulePaymentModal';
+import FaqSection from './components/FaqSection';
 
 const getCurrentMonth = () => {
   const now = new Date();
@@ -90,6 +91,9 @@ function App() {
               </div>
             </section>
           </div>
+
+          <FaqSection />
+
         </main>
       </div>
 
