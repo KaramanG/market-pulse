@@ -1,0 +1,54 @@
+/* Стили только для существующего хедера */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  background: transparent;
+  height: 60px;
+  gap: 2rem;
+  border-bottom: 1px solid #ccc;
+  flex-shrink: 0; /* Важно для правильного позиционирования */
+}
+
+.header-left, .header-right {
+  flex: 1;
+}
+
+.header-center {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+}
+
+.brand-name {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+  margin-left: 20px;
+}
+
+.brand-logo {
+  border-radius: 10px;
+  height: 32px;
+}
+
+.search-wrapper {
+  /* Пока пустой */
+}
+
+.search {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 300px;
+  background-color: white;
+}

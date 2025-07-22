@@ -5,6 +5,7 @@ import ChartFilters from './components/ChartFilters';
 import SchedulePaymentModal from './components/SchedulePaymentModal';
 import FaqSection from './components/FaqSection';
 import Sidebar from './components/Sidebar';
+import Header from './components/Header';
 
 const getCurrentMonth = () => {
   const now = new Date();
@@ -23,28 +24,9 @@ function App() {
 
   return (
     <div className="app-container">
-      <header className="app-header" role="banner">
-        <div className="header-left">
-          <div className="sidebar-logo">
-            <img src="/img/alfa.svg" alt="Логотип Альфа-Бизнес" className='brand-logo' />
-            <span className="brand-name">Альфа-Бизнес</span>
-          </div>
-        </div>
-        <div className="header-center">
-          <div className="search-wrapper" role="search">
-            <input
-              className="search"
-              type="search"
-              placeholder="Поиск..."
-              aria-label="Поиск по системе"
-            />
-          </div>
-        </div>
-        <div className="header-right"></div>
-      </header>
+      <Header />
 
       <div className="content-area">
-
         <Sidebar />
         
         <main className="main-section main-grid">
@@ -78,10 +60,9 @@ function App() {
                 <MyChart period={period} selectedMonth={selectedMonth} />
               </div>
             </section>
+
+            <FaqSection />
           </div>
-
-          <FaqSection />
-
         </main>
       </div>
 
