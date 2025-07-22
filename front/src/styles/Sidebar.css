@@ -1,10 +1,8 @@
 .sidebar {
-  width: 240px;
   background: transparent;
   padding: 1rem;
   overflow-y: auto;
   box-sizing: border-box;
-  border-right: 1px solid #e0e0e0;
 }
 
 .sidebar-menu {
@@ -12,6 +10,10 @@
   margin: 0;
   padding: 0;
   padding-top: 1rem;
+}
+
+.sidebar-menu li {
+  margin-bottom: 10px;
 }
 
 .sidebar-menu a {
@@ -35,4 +37,10 @@
 
 .sidebar-icon {
   flex-shrink: 0;
+}
+
+.sidebar-menu a:hover .sidebar-icon,
+.sidebar-menu a:focus-visible .sidebar-icon,
+.sidebar-menu a:active .sidebar-icon {
+  color: #ffffff;
 }

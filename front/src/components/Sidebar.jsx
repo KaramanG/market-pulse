@@ -24,7 +24,7 @@ const Sidebar = () => {
           return (
             <li key={index}>
               <a href="#">
-                <IconComponent className="sidebar-icon" size={20} strokeWidth={1.5} />
+                <IconComponent className="sidebar-icon" size={22} strokeWidth={2} />
                 <span>{item.text}</span>
               </a>
             </li>
