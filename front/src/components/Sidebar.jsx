@@ -1,21 +1,35 @@
 import React from 'react';
-import '../styles/Sidebar.css'
+import { PlusCircle, Rocket, Radio, RefreshCw, FileInput, FileText, Percent, Landmark, Wallet, Archive, Contact } from 'lucide-react';
+import '../styles/Sidebar.css';
 
 const Sidebar = () => {
+  const menuItems = [
+    { text: 'Новый платёж', icon: PlusCircle },
+    { text: 'Лента операций', icon: Rocket },
+    { text: 'Эквайринг и касса', icon: Radio },
+    { text: 'Платежи в работе', icon: RefreshCw },
+    { text: 'Импорт реестров', icon: FileInput },
+    { text: 'Выписка', icon: FileText },
+    { text: 'Кредитные продукты', icon: Percent },
+    { text: 'Депозиты', icon: Landmark },
+    { text: 'Заказ наличных', icon: Wallet },
+    { text: 'Самоинкассации', icon: Archive },
+  ];
+
   return (
     <aside className="sidebar" aria-label="Боковая панель">
       <ul className="sidebar-menu">
-        <li><a href="#">Новый платёж</a></li>
-        <li><a href="#">Лента операций</a></li>
-        <li><a href="#">Эквайринг и касса</a></li>
-        <li><a href="#">Платежи в работе</a></li>
-        <li><a href="#">Импорт реестров</a></li>
-        <li><a href="#">Выписка</a></li>
-        <li><a href="#">Кредитные продукты</a></li>
-        <li><a href="#">Депозиты</a></li>
-        <li><a href="#">Заказ наличных</a></li>
-        <li><a href="#">Самоинкассации</a></li>
-        <li><a href="#">Контрагенты</a></li>
+        {menuItems.map((item, index) => {
+          const IconComponent = item.icon;
+          return (
+            <li key={index}>
+              <a href="#">
+                <IconComponent className="sidebar-icon" size={20} strokeWidth={1.5} />
+                <span>{item.text}</span>
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </aside>
   );
