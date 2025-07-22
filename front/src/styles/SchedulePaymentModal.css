@@ -22,9 +22,9 @@
 }
 
 .modal-title {
-  font-family: 'Styrene A LC', Arial, sans-serif;
+  font-family: inherit;
   font-size: 28px;
-  font-weight: 800;
+  font-weight: 700;
   margin-top: 0;
   margin-bottom: 1.5rem;
 }
