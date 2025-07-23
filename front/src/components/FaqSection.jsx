@@ -1,51 +1,77 @@
-import { useState } from 'react';
-import '../styles/FaqSection.css';
+import React, { useState, useEffect, useRef } from 'react';
+import '../styles/FaqSection.css'; 
 
-const faqData = [
-  {
-    question: 'Что показано на графиках?',
-    answer: 'Графики показывают количество транзакций, средний чек, выручку по клиентам. Данные отображаются по вашим транзакциям и по конкурентам.'
-  },
-  {
-    question: 'По какому критерию формируется график с данными конкурентов?',
-    answer: 'Здесь будет содержательный ответ о том, как формируются данные по конкурентам для анализа кассовых разрывов.'
-  },
-  {
-    question: 'За какой период можно посмотреть данные?',
-    answer: 'Данные по кассовым разрывам доступны для анализа за последние 12 месяцев.'
-  },
-  {
-    question: 'Сервис показывает весь рынок или только его часть?',
-    answer: 'Сервис анализирует обезличенные данные по релевантной группе конкурентов, чтобы обеспечить репрезентативную картину.'
-  }
+const faqs = [
+  { question: "Что показано на графиках?", answer: "Графики показывают количество транзакций, средний чек, выручку по клиентам. Данные отображаются по дням." },
+  { question: "По какому критерию формируется график с данными конкурентов?", answer: "Данные конкурентов формируются на основе обезличенной и агрегированной статистики по схожим видам деятельности в вашем регионе." },
+  { question: "За какой период можно посмотреть данные?", answer: "Вы можете просматривать данные за последнюю неделю, месяц или выбрать конкретный период в календаре." },
+  { question: "Сервис показывает весь рынок или только его часть?", answer: "Сервис анализирует репрезентативную выборку рынка, достаточную для построения точных прогнозов и анализа тенденций." },
 ];
 
-const FaqSection = () => {
-  const [openIndex, setOpenIndex] = useState(null);
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
 
-  const handleToggle = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
+
+const FaqSection = () => {
+  const [openIndexes, setOpenIndexes] = useState([]);
+  const prevOpenIndexes = usePrevious(openIndexes) || [];
+  
+  const itemRefs = useRef([]);
+
+  useEffect(() => {
+    const newIndex = openIndexes.find(index => !prevOpenIndexes.includes(index));
+
+    if (newIndex !== undefined) {
+      const elementToScroll = itemRefs.current[newIndex];
+      if (elementToScroll) {
+        elementToScroll.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest'
+        });
+      }
+    }
+  }, [openIndexes, prevOpenIndexes]);
+
+
+  const handleToggle = (indexToToggle) => {
+    const isOpen = openIndexes.includes(indexToToggle);
+    if (isOpen) {
+      setOpenIndexes(openIndexes.filter(i => i !== indexToToggle));
+    } else {
+      setOpenIndexes([...openIndexes, indexToToggle]);
+    }
   };
 
   return (
-    <section className="faq-section" aria-label="Частые вопросы">
+    <section className="faq-section">
       <h2 className="faq-title">Частые вопросы</h2>
       <div className="faq-list">
-        {faqData.map((item, index) => (
-          <div key={index} className="faq-item">
+        {faqs.map((faq, index) => (
+          <div 
+            className="faq-item" 
+            key={index}
+            ref={el => itemRefs.current[index] = el}
+          >
             <button
+              type="button"
               className="faq-question"
               onClick={() => handleToggle(index)}
-              aria-expanded={openIndex === index}
+              aria-expanded={openIndexes.includes(index)}
             >
-              <span>{item.question}</span>
-              <span className={`faq-arrow ${openIndex === index ? 'open' : ''}`}></span>
+              {faq.question}
+              <div className={`faq-arrow ${openIndexes.includes(index) ? 'open' : ''}`} />
             </button>
-            {openIndex === index && (
+            
+            <div className={`faq-answer-wrapper ${openIndexes.includes(index) ? 'open' : ''}`}>
               <div className="faq-answer">
-                <p>{item.answer}</p>
+                <p>{faq.answer}</p>
               </div>
-            )}
+            </div>
           </div>
         ))}
       </div>
