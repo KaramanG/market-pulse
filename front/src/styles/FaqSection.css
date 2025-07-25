@@ -7,8 +7,13 @@
   font-family: inherit;
   font-size: 28px;
   font-weight: 700;
-  margin-bottom: 24px;
+  /*margin-bottom: 24px;*/
+  margin: 0;
   color: #2b2d33;
+}
+
+.faq-list {
+  padding: 24px;
 }
 
 .faq-item {
@@ -17,7 +22,7 @@
   margin-bottom: 0;
   box-shadow: none;
   border: none;
-  border-bottom: 1px solid #C7CBD1; 
+  border-bottom: 1px solid #C7CBD1;
 }
 
 .faq-item:last-child {
@@ -33,7 +38,7 @@
   border: none;
   width: 100%;
   cursor: pointer;
-  padding: 28px 24px;
+  padding: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
