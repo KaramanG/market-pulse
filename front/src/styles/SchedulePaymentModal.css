@@ -1,3 +1,23 @@
+@keyframes fadeIn {
+  from {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+@keyframes slideDownFast {
+  from {
+    transform: translateY(-80px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -9,6 +29,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
 }
 
 .modal-content {
@@ -19,6 +40,7 @@
   padding: 1.5rem 2rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border: 1px solid #E6E8EB;
+  animation: slideDownFast 0.2s ease-out;
 }
 
 .modal-title {
