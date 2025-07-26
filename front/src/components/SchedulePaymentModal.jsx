@@ -10,6 +10,7 @@ function SchedulePaymentModal({ isOpen, onClose }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleClose = () => {
+    if (isSubmitting) return;
     setDate('');
     setAmount('');
     setPurpose('');
@@ -30,7 +31,7 @@ function SchedulePaymentModal({ isOpen, onClose }) {
     try {
       await axios.post('http://localhost:5000/api/planned-payments', {
         payment_date: date,
-        amount: amount,
+        amount: parseFloat(amount),
         purpose: purpose
       });
       alert('Успешно запланировано!');
