@@ -124,9 +124,11 @@ function MyChart({ period, selectedMonth, dataVersion }) {
         <Tooltip content={<CustomTooltip />} />
         <ReferenceLine y={0} stroke="#666" strokeWidth={1}/>
         
-        <Area type="monotone" dataKey="value" fill="url(#pattern-stripe)" stroke="none" />
-        <Area type="monotone" dataKey={p => p.type === 'actual' ? p.value : null} fill="url(#colorActual)" stroke="none" />
-        <Line type="monotone" dataKey="value" stroke="#005a9e" strokeWidth={2} dot={false} activeDot={{ r: 6 }} />
+        <Area type="monotone" dataKey="value" fill="url(#pattern-stripe)" stroke="none" dot={false} />
+        <Area type="monotone" dataKey={p => p.type === 'actual' ? p.value : null} fill="url(#colorActual)" stroke="none" dot={false} />
+
+        {/* Изменения здесь: убираем dot={false} и можем настроить стиль точек */}
+        <Line type="monotone" dataKey="value" stroke="#005a9e" strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 6 }} />
 
       </ComposedChart>
     </ResponsiveContainer>
