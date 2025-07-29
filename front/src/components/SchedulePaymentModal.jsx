@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import '../styles/SchedulePaymentModal.css';
 
 function SchedulePaymentModal({ isOpen, onClose }) {
@@ -37,11 +38,17 @@ function SchedulePaymentModal({ isOpen, onClose }) {
         purpose: purpose,
         transaction_type: transactionType
       });
-      alert('Успешно запланировано!');
+
+      toast.success('Транзакция успешно запланирована!');
       handleClose();
+
     } catch (err) {
       console.error("Ошибка при добавлении платежа:", err);
-      setError('Не удалось добавить платеж. Попробуйте снова.');
+      const errorMessage = 'Не удалось добавить платеж. Попробуйте снова.';
+
+      toast.error(errorMessage);
+      setError(errorMessage);
+
     } finally {
       setIsSubmitting(false);
     }

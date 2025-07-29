@@ -7,6 +7,9 @@ import FaqSection from './components/FaqSection';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const getCurrentMonth = () => {
   const now = new Date();
   const year = now.getFullYear();
@@ -69,6 +72,19 @@ function App() {
       <SchedulePaymentModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+      />
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
     </div>
   );
