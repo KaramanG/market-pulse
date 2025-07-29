@@ -53,26 +53,50 @@ async function run() {
         if (isNaN(accountNumber)) return res.status(400).send("Номер счета должен быть числом.");
         
         const { period, month } = req.query;
-        let startDate = new Date('1970-01-01');
+        let startDate, endDate;
         const today = new Date();
-        today.setHours(23, 59, 59, 999);
 
         if (period === 'week') {
             startDate = new Date();
-            startDate.setDate(startDate.getDate() - 7);
+            startDate.setDate(today.getDate() - 7);
             startDate.setHours(0, 0, 0, 0);
+            endDate = new Date();
+            endDate.setHours(23, 59, 59, 999);
         } else if (period === 'month' && month) {
             const [year, monthNum] = month.split('-').map(Number);
             startDate = new Date(year, monthNum - 1, 1);
+            endDate = new Date(year, monthNum, 0);
+            endDate.setHours(23, 59, 59, 999);
         } else if (period === 'year') {
-            startDate = new Date(new Date().getFullYear(), 0, 1);
+            const year = new Date().getFullYear();
+            startDate = new Date(year, 0, 1);
+            endDate = new Date(year, 11, 31);
+            endDate.setHours(23, 59, 59, 999);
+        } else {
+             startDate = new Date();
+             startDate.setDate(today.getDate() - 7);
+             startDate.setHours(0, 0, 0, 0);
+             endDate = new Date();
+             endDate.setHours(23, 59, 59, 999);
         }
+
         const accountInfo = await accounts.findOne({ account_number: accountNumber });
         const initialBalance = accountInfo ? accountInfo.initial_balance : 0;
         
+        const balanceCorrectionPipeline = [
+            { $match: { transaction_date: { $lt: startDate.toISOString() } } },
+            { $project: { _id:0, transactions: [ { account: "$sender_account", change: { $multiply: ["$amount", -1] } }, { account: "$receiver_account", change: "$amount" } ]}},
+            { $unwind: "$transactions" },
+            { $replaceRoot: { newRoot: "$transactions" } },
+            { $match: { account: accountNumber } },
+            { $group: { _id: null, totalChange: { $sum: "$change" } } }
+        ];
+        const balanceResult = await transactions.aggregate(balanceCorrectionPipeline).toArray();
+        const balanceAtPeriodStart = initialBalance + (balanceResult[0]?.totalChange || 0);
+
         const groupFormat = period === 'year' ? "%Y-%m" : "%Y-%m-%d";
         const historyPipeline = [
-            { $match: { transaction_date: { $lte: today.toISOString() } } },
+            { $match: { transaction_date: { $gte: startDate.toISOString(), $lte: endDate.toISOString() } } },
             { $project: { _id:0, transactions: [ { account: "$sender_account", date: { $toDate: "$transaction_date" }, change: { $multiply: ["$amount", -1] } }, { account: "$receiver_account", date: { $toDate: "$transaction_date" }, change: "$amount" } ]}},
             { $unwind: "$transactions" },
             { $replaceRoot: { newRoot: "$transactions" } },
@@ -80,43 +104,45 @@ async function run() {
             { $group: { _id: { $dateToString: { format: groupFormat, date: "$date" } }, periodChange: { $sum: "$change" }}},
             { $sort: { _id: 1 } },
             { $setWindowFields: { sortBy: { _id: 1 }, output: { running_balance: { $sum: "$periodChange", window: { documents: [ "unbounded", "current" ] }}}}},
-            { $project: { _id: 0, date: { $dateFromString: { dateString: { $concat: [ "$_id", period === 'year' ? "-01" : "" ] }}}, value: { $add: [initialBalance, "$running_balance"] }, type: 'actual' }}
+            { $project: { _id: 0, date: { $dateFromString: { dateString: { $concat: [ "$_id", period === 'year' ? "-01" : "" ] }}}, value: { $add: [balanceAtPeriodStart, "$running_balance"] }, type: 'actual' }}
         ];
         
-        let allHistoricalData = await transactions.aggregate(historyPipeline).toArray();
-        const historicalData = allHistoricalData.filter(item => new Date(item.date) >= startDate);
+        const historicalData = await transactions.aggregate(historyPipeline).toArray();
+        let forecastData = [];
 
-        let lastBalance = initialBalance;
-        if (allHistoricalData.length > 0) {
-            lastBalance = allHistoricalData[allHistoricalData.length - 1].value;
-        }
-        
-        const forecastStartDate = new Date(new Date().setHours(0, 0, 0, 0));
-        const plannedPayments = await planned_payments.find({ payment_date: { $gte: forecastStartDate } }).sort({ payment_date: 1 }).toArray();
-        const forecastData = [];
-        let currentForecastBalance = lastBalance;
-        const dailyForecasts = {};
+        if (period === 'week') {
+            let lastBalance = balanceAtPeriodStart;
+            if (historicalData.length > 0) {
+                lastBalance = historicalData[historicalData.length - 1].value;
+            }
 
-        plannedPayments.forEach(p => {
-            const dateStr = p.payment_date.toISOString().split('T')[0];
-            if (!dailyForecasts[dateStr]) dailyForecasts[dateStr] = 0;
-            dailyForecasts[dateStr] += (p.transaction_type === '+' ? p.amount : -p.amount);
-        });
+            const forecastStartDate = new Date(new Date().setHours(0, 0, 0, 0));
+            const plannedPayments = await planned_payments.find({ payment_date: { $gte: forecastStartDate } }).sort({ payment_date: 1 }).toArray();
+            let currentForecastBalance = lastBalance;
+            const dailyForecasts = {};
 
-        const sortedForecastDates = Object.keys(dailyForecasts).sort();
-        
-        if (sortedForecastDates.length > 0) {
-            forecastData.push({
-                date: forecastStartDate,
-                value: lastBalance,
-                type: 'forecast'
+            plannedPayments.forEach(p => {
+                const dateStr = p.payment_date.toISOString().split('T')[0];
+                if (!dailyForecasts[dateStr]) dailyForecasts[dateStr] = 0;
+                dailyForecasts[dateStr] += (p.transaction_type === '+' ? p.amount : -p.amount);
+            });
+
+            const sortedForecastDates = Object.keys(dailyForecasts).sort();
+            
+            if (sortedForecastDates.length > 0) {
+                const firstForecastDate = new Date(sortedForecastDates[0]);
+                forecastData.push({
+                    date: forecastStartDate > firstForecastDate ? firstForecastDate : forecastStartDate,
+                    value: lastBalance,
+                    type: 'forecast'
+                });
+            }
+            
+            sortedForecastDates.forEach(dateStr => {
+                currentForecastBalance += dailyForecasts[dateStr];
+                forecastData.push({ date: new Date(dateStr), value: currentForecastBalance, type: 'forecast' });
             });
         }
-        
-        sortedForecastDates.forEach(dateStr => {
-            currentForecastBalance += dailyForecasts[dateStr];
-            forecastData.push({ date: new Date(dateStr), value: currentForecastBalance, type: 'forecast' });
-        });
         
         res.json({
             actual: historicalData,
