@@ -4,7 +4,7 @@ import { ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip, Respon
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
-    const pointData = payload.find(p => p.value !== undefined)?.payload;
+    const pointData = payload.find(p => p.name.includes('value_'))?.payload;
     if (!pointData) return null;
 
     return (
@@ -28,6 +28,7 @@ const formatXAxis = (tickItem, period) => {
     return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
 };
 
+
 function MyChart({ period, selectedMonth, dataVersion }) {
   const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,11 +48,41 @@ function MyChart({ period, selectedMonth, dataVersion }) {
         const response = await axios.get(`http://localhost:5000/api/account-history/${accountNumber}`, { params });
         
         const { actual, forecast } = response.data;
-        const combinedData = [...actual, ...forecast];
         
-        combinedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+        const todayBoundary = new Date();
+        todayBoundary.setHours(0, 0, 0, 0);
+
+        const allPoints = [...actual, ...forecast].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        let processedData = allPoints.map(p => ({
+          ...p,
+          date: new Date(p.date), 
+          type: new Date(p.date) < todayBoundary ? 'actual' : 'forecast'
+        }));
         
-        setChartData(combinedData);
+        const lastActualIndex = processedData.findLastIndex(p => p.type === 'actual');
+
+        if (lastActualIndex !== -1 && lastActualIndex < processedData.length - 1) {
+          const lastActualPoint = processedData[lastActualIndex];
+          
+          const bridgePoint = {
+            date: todayBoundary,
+            value: lastActualPoint.value,
+            type: 'forecast',
+            isBridge: true
+          };
+
+          processedData.splice(lastActualIndex + 1, 0, bridgePoint);
+        }
+        
+        const finalData = processedData.map(p => ({
+            ...p,
+            value_actual: (p.type === 'actual' || p.isBridge) ? p.value : null,
+            value_forecast: (p.type === 'forecast' || p.isBridge) ? p.value : null,
+        }));
+
+        setChartData(finalData);
+
       } catch (err) {
         setError("Не удалось загрузить данные для графика.");
         console.error("Ошибка при загрузке данных для графика:", err);
@@ -63,29 +94,24 @@ function MyChart({ period, selectedMonth, dataVersion }) {
   }, [period, selectedMonth, dataVersion]);
 
   const yAxisTicks = useMemo(() => {
-      if(chartData.length === 0) return [];
-
-      const yValues = chartData.map(p => p.value);
-      const yMax = Math.max(...yValues);
-      const yMin = Math.min(...yValues);
-
-      const top = Math.ceil(yMax / 10000) * 10000;
-      const bottom = Math.floor(yMin / 10000) * 10000;
-      
-      const ticks = [];
-      const range = Math.max(Math.abs(top), Math.abs(bottom));
-      const step = Math.ceil((range / 4) / 10000) * 10000;
-
-      if (step === 0) return [0];
-
-      for (let i = 0; i <= top + step; i += step) {
-          if(i <= top * 1.1) ticks.push(i);
-      }
-      for (let i = -step; i >= bottom - step; i -= step) {
-          if(i >= bottom * 1.1) ticks.push(i);
-      }
-      
-      return [...new Set(ticks)].sort((a, b) => a - b);
+    if (chartData.length === 0) return [];
+    const yValues = chartData.map(p => p.value).filter(v => v !== null && v !== undefined);
+    if (yValues.length === 0) return [0];
+    const yMax = Math.max(...yValues);
+    const yMin = Math.min(...yValues);
+    const top = Math.ceil(yMax / 10000) * 10000;
+    const bottom = Math.floor(yMin / 10000) * 10000;
+    const ticks = [];
+    const range = Math.max(Math.abs(top), Math.abs(bottom));
+    const step = Math.ceil((range / 4) / 10000) * 10000;
+    if (step === 0) return [0];
+    for (let i = 0; i <= top + step; i += step) {
+      if (i <= top * 1.1) ticks.push(i);
+    }
+    for (let i = -step; i >= bottom - step; i -= step) {
+      if (i >= bottom * 1.1) ticks.push(i);
+    }
+    return [...new Set(ticks)].sort((a, b) => a - b);
   }, [chartData]);
 
 
@@ -124,11 +150,27 @@ function MyChart({ period, selectedMonth, dataVersion }) {
         <Tooltip content={<CustomTooltip />} />
         <ReferenceLine y={0} stroke="#666" strokeWidth={1}/>
         
-        <Area type="monotone" dataKey="value" fill="url(#pattern-stripe)" stroke="none" dot={false} />
-        <Area type="monotone" dataKey={p => p.type === 'actual' ? p.value : null} fill="url(#colorActual)" stroke="none" dot={false} />
+        <Area type="monotone" dataKey="value_actual" name="value_actual" fill="url(#colorActual)" stroke="none" baseValue={0} />
+        
+        <Area type="monotone" dataKey="value_forecast" name="value_forecast" fill="url(#pattern-stripe)" stroke="none" baseValue={0} />
 
-        {/* Изменения здесь: убираем dot={false} и можем настроить стиль точек */}
-        <Line type="monotone" dataKey="value" stroke="#005a9e" strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 6 }} />
+        <Line 
+            type="monotone" 
+            dataKey="value_actual"
+            name="value_actual"
+            stroke="#005a9e" 
+            strokeWidth={2} 
+            activeDot={{ r: 6 }}
+        />
+        <Line 
+            type="monotone"
+            dataKey="value_forecast"
+            name="value_forecast"
+            stroke="#005a9e" 
+            strokeWidth={2} 
+            dot={{ r: 3, fill: '#fff', stroke: '#005a9e', strokeWidth: 1 }} 
+            activeDot={{ r: 6, strokeWidth: 1 }} 
+        />
 
       </ComposedChart>
     </ResponsiveContainer>

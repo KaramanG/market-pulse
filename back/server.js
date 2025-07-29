@@ -31,8 +31,10 @@ async function run() {
             if (transaction_type !== '+' && transaction_type !== '-') {
                 return res.status(400).send("Недопустимое значение для типа транзакции.");
             }
+            
+            const utcDate = new Date(payment_date + 'T00:00:00.000Z');
             const newPayment = {
-                payment_date: new Date(payment_date),
+                payment_date: utcDate,
                 amount: parseFloat(amount),
                 purpose: purpose,
                 transaction_type: transaction_type,
@@ -110,38 +112,45 @@ async function run() {
         const historicalData = await transactions.aggregate(historyPipeline).toArray();
         let forecastData = [];
 
-        if (period === 'week') {
-            let lastBalance = balanceAtPeriodStart;
+        const todayForForecast = new Date();
+        const currentMonthStr = `${todayForForecast.getFullYear()}-${String(todayForForecast.getMonth() + 1).padStart(2, '0')}`;
+        const shouldCreateForecast = period === 'week' || (period === 'month' && month === currentMonthStr);
+        
+        if (shouldCreateForecast) {
+            let lastKnownBalance = balanceAtPeriodStart;
             if (historicalData.length > 0) {
-                lastBalance = historicalData[historicalData.length - 1].value;
+                const lastActualDataPoint = historicalData[historicalData.length - 1];
+                if (new Date(lastActualDataPoint.date) <= todayForForecast) {
+                    lastKnownBalance = lastActualDataPoint.value;
+                }
             }
-
-            const forecastStartDate = new Date(new Date().setHours(0, 0, 0, 0));
-            const plannedPayments = await planned_payments.find({ payment_date: { $gte: forecastStartDate } }).sort({ payment_date: 1 }).toArray();
-            let currentForecastBalance = lastBalance;
-            const dailyForecasts = {};
-
-            plannedPayments.forEach(p => {
-                const dateStr = p.payment_date.toISOString().split('T')[0];
-                if (!dailyForecasts[dateStr]) dailyForecasts[dateStr] = 0;
-                dailyForecasts[dateStr] += (p.transaction_type === '+' ? p.amount : -p.amount);
-            });
-
-            const sortedForecastDates = Object.keys(dailyForecasts).sort();
-            
-            if (sortedForecastDates.length > 0) {
-                const firstForecastDate = new Date(sortedForecastDates[0]);
-                forecastData.push({
-                    date: forecastStartDate > firstForecastDate ? firstForecastDate : forecastStartDate,
-                    value: lastBalance,
-                    type: 'forecast'
+        
+            const forecastStartDate = new Date();
+            forecastStartDate.setHours(0, 0, 0, 0);
+        
+            const plannedPayments = await planned_payments.find({
+                payment_date: { $gte: forecastStartDate }
+            }).sort({ payment_date: 1 }).toArray();
+        
+            if (plannedPayments.length > 0) {
+                let currentForecastBalance = lastKnownBalance;
+                const dailyForecasts = {};
+        
+                plannedPayments.forEach(p => {
+                    const dateStr = p.payment_date.toISOString().split('T')[0];
+                    if (!dailyForecasts[dateStr]) {
+                        dailyForecasts[dateStr] = 0;
+                    }
+                    dailyForecasts[dateStr] += (p.transaction_type === '+' ? p.amount : -p.amount);
+                });
+                
+                const sortedForecastDates = Object.keys(dailyForecasts).sort();
+        
+                sortedForecastDates.forEach(dateStr => {
+                    currentForecastBalance += dailyForecasts[dateStr];
+                    forecastData.push({ date: new Date(dateStr), value: currentForecastBalance, type: 'forecast' });
                 });
             }
-            
-            sortedForecastDates.forEach(dateStr => {
-                currentForecastBalance += dailyForecasts[dateStr];
-                forecastData.push({ date: new Date(dateStr), value: currentForecastBalance, type: 'forecast' });
-            });
         }
         
         res.json({
