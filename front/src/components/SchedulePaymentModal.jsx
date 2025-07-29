@@ -6,6 +6,7 @@ function SchedulePaymentModal({ isOpen, onClose }) {
   const [date, setDate] = useState('');
   const [amount, setAmount] = useState('');
   const [purpose, setPurpose] = useState('');
+  const [transactionType, setTransactionType] = useState('-'); 
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -14,6 +15,7 @@ function SchedulePaymentModal({ isOpen, onClose }) {
     setDate('');
     setAmount('');
     setPurpose('');
+    setTransactionType('-');
     setError('');
     onClose();
   };
@@ -23,7 +25,7 @@ function SchedulePaymentModal({ isOpen, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    if (!date || !amount || !purpose) {
+    if (!date || !amount || !purpose || !transactionType) {
       setError('Пожалуйста, заполните все поля.');
       return;
     }
@@ -32,7 +34,8 @@ function SchedulePaymentModal({ isOpen, onClose }) {
       await axios.post('http://localhost:5000/api/planned-payments', {
         payment_date: date,
         amount: parseFloat(amount),
-        purpose: purpose
+        purpose: purpose,
+        transaction_type: transactionType
       });
       alert('Успешно запланировано!');
       handleClose();
@@ -49,6 +52,16 @@ function SchedulePaymentModal({ isOpen, onClose }) {
       <div className="modal-content" onClick={e => e.stopPropagation()}>
         <h3 className="modal-title">Запланировать платеж</h3>
         <form onSubmit={handleSubmit} className="modal-form">
+          <select
+            className="modal-input"
+            value={transactionType}
+            onChange={e => setTransactionType(e.target.value)}
+            required
+          >
+            <option value="-">Расход</option>
+            <option value="+">Доход</option>
+          </select>
+
           <input
             type="date"
             className="modal-input"

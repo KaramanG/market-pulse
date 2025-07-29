@@ -25,17 +25,22 @@ async function run() {
     // Обработка модального окна
     app.post('/api/planned-payments', async (req, res) => {
       try {
-        console.log("-> Получен POST-запрос на /api/planned-payments"); // Отладочное сообщение
-        const { payment_date, amount, purpose } = req.body;
-        
-        if (!payment_date || !amount || !purpose) {
+        console.log("-> Получен POST-запрос на /api/planned-payments");
+        const { payment_date, amount, purpose, transaction_type } = req.body;      
+
+        if (!payment_date || !amount || !purpose || !transaction_type) {
           return res.status(400).send("Все поля обязательны.");
+        }
+
+        if (transaction_type !== '+' && transaction_type !== '-') {
+            return res.status(400).send("Недопустимое значение для типа транзакции.");
         }
 
         const newPayment = {
           payment_date: new Date(payment_date),
           amount: parseFloat(amount),
           purpose: purpose,
+          transaction_type: transaction_type,
           creation_date: new Date(),
           user_id: 1
         };
