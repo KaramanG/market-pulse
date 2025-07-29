@@ -1,79 +1,134 @@
-
-import { useMemo } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Label } from 'recharts';
-import { useChartData } from '../hooks/useChartData';
+import React, { useState, useEffect, useMemo } from 'react';
+import axios from 'axios';
+import { ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
-    const value = payload[0].value;
-    const date = new Date(label);
-    const formattedDate = date.toLocaleDateString('ru-RU', { day: '2-digit', month: 'long', year: 'numeric' });
-    const formattedValue = new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', minimumFractionDigits: 0, signDisplay: 'exceptZero' }).format(value);
+    const pointData = payload.find(p => p.value !== undefined)?.payload;
+    if (!pointData) return null;
+
     return (
-      <div style={{ backgroundColor: '#fff', border: '1px solid #ccc', padding: '10px 15px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
-        <p style={{ margin: 0, color: '#666', fontSize: '12px' }}>{formattedDate}</p>
-        <p style={{ margin: '4px 0 0', color: value >= 0 ? '#2e8b57' : '#d9534f', fontSize: '16px', fontWeight: 'bold' }}>{formattedValue}</p>
+      <div style={{ background: 'white', padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+        <p style={{ margin: 0, fontSize: '12px', color: '#666' }}>{new Date(label).toLocaleDateString('ru-RU', {day: 'numeric', month: 'long'})}</p>
+        <p style={{ margin: '5px 0 0', color: pointData.value >= 0 ? 'green' : '#d9534f', fontWeight: 'bold' }}>
+          {`${pointData.value.toLocaleString('ru-RU')} ₽`}
+        </p>
+        <small style={{ color: '#555' }}>{pointData.type === 'forecast' ? 'Прогнозный баланс' : 'Фактический баланс'}</small>
       </div>
     );
   }
   return null;
 };
 
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  // Проверяем, если это первый день месяца, то это годовой/месячный обзор
-  if (date.getDate() === 1 && date.getHours() === 0 && date.getMinutes() === 0) {
-      return date.toLocaleDateString('ru-RU', { month: 'short', year: '2-digit' });
-  }
-  // Иначе это дневной обзор
-  return date.toLocaleDateString('ru-RU', { day: '2-digit', month: 'short' });
+const formatXAxis = (tickItem, period) => {
+    const date = new Date(tickItem);
+    if (period === 'year') {
+        return date.toLocaleDateString('ru-RU', { month: 'short', year: '2-digit' });
+    }
+    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
 };
 
-const formatValue = (value) => {
-  if (value === 0) return '0';
-  const thousands = value / 1000;
-  return `${Math.round(thousands)} тыс.`;
-};
+function MyChart({ period, selectedMonth, dataVersion }) {
+  const [chartData, setChartData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const accountNumber = 1;
+        const params = new URLSearchParams();
+        params.append('period', period);
+        if (period === 'month' && selectedMonth) {
+          params.append('month', selectedMonth);
+        }
+        const response = await axios.get(`http://localhost:5000/api/account-history/${accountNumber}`, { params });
+        
+        const { actual, forecast } = response.data;
+        const combinedData = [...actual, ...forecast];
+        
+        combinedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+        setChartData(combinedData);
+      } catch (err) {
+        setError("Не удалось загрузить данные для графика.");
+        console.error("Ошибка при загрузке данных для графика:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [period, selectedMonth, dataVersion]);
 
-function MyChart({ period, selectedMonth }) {
-  const { chartData, loading, error } = useChartData({ period, selectedMonth });
+  const yAxisTicks = useMemo(() => {
+      if(chartData.length === 0) return [];
 
-  const gradientOffset = useMemo(() => {
-    if (!chartData || chartData.length === 0) return 0.5;
-    const dataValues = chartData.map((i) => i.value);
-    const maxValue = Math.max(...dataValues);
-    const minValue = Math.min(...dataValues);
-    if (maxValue === minValue) return maxValue >= 0 ? 1 : 0;
-    if (minValue >= 0) return 1;
-    return maxValue / (maxValue - minValue);
+      const yValues = chartData.map(p => p.value);
+      const yMax = Math.max(...yValues);
+      const yMin = Math.min(...yValues);
+
+      const top = Math.ceil(yMax / 10000) * 10000;
+      const bottom = Math.floor(yMin / 10000) * 10000;
+      
+      const ticks = [];
+      const range = Math.max(Math.abs(top), Math.abs(bottom));
+      const step = Math.ceil((range / 4) / 10000) * 10000;
+
+      if (step === 0) return [0];
+
+      for (let i = 0; i <= top + step; i += step) {
+          if(i <= top * 1.1) ticks.push(i);
+      }
+      for (let i = -step; i >= bottom - step; i -= step) {
+          if(i >= bottom * 1.1) ticks.push(i);
+      }
+      
+      return [...new Set(ticks)].sort((a, b) => a - b);
   }, [chartData]);
+
 
   if (loading) return <div>Загрузка графика...</div>;
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
-
-  if (!loading && chartData.length === 0) {
-    return <div style={{ textAlign: 'center', padding: '50px', color: '#666' }}>Нет данных для отображения за выбранный период.</div>;
-  }
-
+  if (chartData.length === 0) return <div style={{ textAlign: 'center', padding: '50px' }}>Нет данных для отображения.</div>;
+  
   return (
-    <ResponsiveContainer width="100%" height={500}>
-      <AreaChart data={chartData} margin={{ top: 20, right: 30, bottom: 50, left: 20 }}>
+    <ResponsiveContainer width="100%" height={400}>
+      <ComposedChart
+        data={chartData}
+        margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+      >
         <defs>
-          <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
-            <stop offset={gradientOffset} stopColor="#0078d7" stopOpacity={0.6}/>
-            <stop offset={gradientOffset} stopColor="#d9534f" stopOpacity={0.6}/>
+          <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#0078d7" stopOpacity={0.7}/>
+            <stop offset="95%" stopColor="#0078d7" stopOpacity={0.1}/>
           </linearGradient>
+          <pattern id="pattern-stripe" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <rect width="4" height="8" transform="translate(0,0)" fill="#0078d7" fillOpacity="0.4"></rect>
+          </pattern>
         </defs>
-        <CartesianGrid stroke="#e0e0e0" strokeDasharray="3 3" />
-        <XAxis dataKey="name" tickFormatter={formatDate} tick={{ fontSize: 12, fill: '#666' }} angle={-35} textAnchor="end" axisLine={false} tickLine={false} dy={10} />
-        <YAxis tickFormatter={formatValue} tick={{ fontSize: 12, fill: '#666' }} axisLine={false} tickLine={false} dx={-5} />
+
+        <XAxis 
+          dataKey="date" 
+          tickFormatter={(tick) => formatXAxis(tick, period)}
+          angle={-30} textAnchor="end" height={60} dy={10}
+        />
+        <YAxis 
+            tickFormatter={(value) => `${Math.round(value / 1000)} тыс.`} 
+            ticks={yAxisTicks}
+            domain={[yAxisTicks[0], yAxisTicks[yAxisTicks.length - 1]]}
+        />
+        
+        <CartesianGrid strokeDasharray="3 3" />
         <Tooltip content={<CustomTooltip />} />
-        <ReferenceLine y={0} stroke="#666" strokeWidth={1} strokeDasharray="3 3">
-          <Label value="0" offset={10} position="insideTopLeft" fill="#666" fontSize={12} />
-        </ReferenceLine>
-        <Area type="monotone" dataKey="value" stroke="#005a9e" strokeWidth={2} fill="url(#splitColor)" dot={{ r: 3, stroke: '#fff', strokeWidth: 1, fill: '#005a9e' }} activeDot={{ r: 6, stroke: '#fff', strokeWidth: 2 }} />
-      </AreaChart>
+        <ReferenceLine y={0} stroke="#666" strokeWidth={1}/>
+        
+        <Area type="monotone" dataKey="value" fill="url(#pattern-stripe)" stroke="none" />
+        <Area type="monotone" dataKey={p => p.type === 'actual' ? p.value : null} fill="url(#colorActual)" stroke="none" />
+        <Line type="monotone" dataKey="value" stroke="#005a9e" strokeWidth={2} dot={false} activeDot={{ r: 6 }} />
+
+      </ComposedChart>
     </ResponsiveContainer>
   );
 }

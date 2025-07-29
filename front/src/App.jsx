@@ -21,9 +21,15 @@ function App() {
   const [activeTab, setActiveTab] = useState(0);
   const tabs = ['Кассовые разрывы', 'Прогнозирование', 'События'];
   
-  const [period, setPeriod] = useState('now');
+  const [period, setPeriod] = useState('week');
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [dataVersion, setDataVersion] = useState(0);
+
+  const handleDataUpdate = () => {
+    setDataVersion(currentVersion => currentVersion + 1);
+  };
 
   return (
     <div className="app-container">
@@ -60,7 +66,11 @@ function App() {
       
             <section className="chart-section" aria-label="Финансовая аналитика">
               <div className="chart-box">
-                <MyChart period={period} selectedMonth={selectedMonth} />
+                <MyChart 
+                  period={period} 
+                  selectedMonth={selectedMonth} 
+                  dataVersion={dataVersion} 
+                />
               </div>
             </section>
 
@@ -72,6 +82,7 @@ function App() {
       <SchedulePaymentModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        onPaymentAdded={handleDataUpdate}
       />
 
       <ToastContainer

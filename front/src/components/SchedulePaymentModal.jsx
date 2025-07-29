@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import '../styles/SchedulePaymentModal.css';
 
-function SchedulePaymentModal({ isOpen, onClose }) {
+function SchedulePaymentModal({ isOpen, onClose, onPaymentAdded }) {
   const [date, setDate] = useState('');
   const [amount, setAmount] = useState('');
   const [purpose, setPurpose] = useState('');
@@ -40,15 +40,15 @@ function SchedulePaymentModal({ isOpen, onClose }) {
       });
 
       toast.success('Транзакция успешно запланирована!');
+      
+      onPaymentAdded(); 
       handleClose();
 
     } catch (err) {
       console.error("Ошибка при добавлении платежа:", err);
       const errorMessage = 'Не удалось добавить платеж. Попробуйте снова.';
-
       toast.error(errorMessage);
       setError(errorMessage);
-
     } finally {
       setIsSubmitting(false);
     }
@@ -68,47 +68,14 @@ function SchedulePaymentModal({ isOpen, onClose }) {
             <option value="-">Расход</option>
             <option value="+">Доход</option>
           </select>
-
-          <input
-            type="date"
-            className="modal-input"
-            value={date}
-            onChange={e => setDate(e.target.value)}
-            required
-          />
-          <input
-            type="number"
-            placeholder="Сумма"
-            className="modal-input"
-            value={amount}
-            onChange={e => setAmount(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Назначение платежа"
-            className="modal-input"
-            value={purpose}
-            onChange={e => setPurpose(e.target.value)}
-            required
-          />
+          <input type="date" className="modal-input" value={date} onChange={e => setDate(e.target.value)} required />
+          <input type="number" placeholder="Сумма" className="modal-input" value={amount} onChange={e => setAmount(e.target.value)} required />
+          <input type="text" placeholder="Назначение платежа" className="modal-input" value={purpose} onChange={e => setPurpose(e.target.value)} required />
+          
           {error && <p className="modal-error">{error}</p>}
           <div className="modal-actions">
-            <button
-              type="button"
-              className="modal-button modal-button-cancel"
-              onClick={handleClose}
-              disabled={isSubmitting}
-            >
-              Отмена
-            </button>
-            <button
-              type="submit"
-              className="modal-button modal-button-submit"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Сохранение...' : 'Сохранить'}
-            </button>
+            <button type="button" className="modal-button modal-button-cancel" onClick={handleClose} disabled={isSubmitting}>Отмена</button>
+            <button type="submit" className="modal-button modal-button-submit" disabled={isSubmitting}>{isSubmitting ? 'Сохранение...' : 'Сохранить'}</button>
           </div>
         </form>
       </div>
