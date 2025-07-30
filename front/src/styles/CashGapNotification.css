@@ -1,14 +1,18 @@
 .notification-box {
-    padding: 15px;
-    border-radius: 8px;
+    padding: 16px;
+    border-radius: 12px;
     display: flex;
-    align-items: center;
-    border: 1px solid #e0e0e0;
+    align-items: flex-start;
+    border: 1px solid transparent;
+    font-size: 14px;
 }
 
 .notification-icon {
-    margin-right: 15px;
-    font-size: 24px;
+    margin-right: 12px;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
 }
 
 .notification-box.ok {
@@ -17,7 +21,7 @@
 }
 
 .notification-box.ok .notification-icon {
-    color: #52c41a;
+    fill: #52c41a;
 }
 
 .notification-box.warning {
@@ -26,14 +30,35 @@
 }
 
 .notification-box.warning .notification-icon {
-    color: #faad14;
+    fill: #faad14;
 }
 
-.notification-box p {
-    margin: 0;
-    font-weight: bold;
+.notification-text p {
+    margin: 0 0 4px 0;
+    font-weight: 700;
+    color: #1f1f1f;
+    font-size: 16px; 
 }
 
-.notification-box small {
-    color: #555;
+.notification-text small {
+    color: #595959;
+    line-height: 1.4;
+    font-size: 14px;
+}
+
+.details-link {
+    display: block;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: normal;
+    color: #0d47a1;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.details-link:hover {
+    text-decoration: none;
 }

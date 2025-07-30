@@ -4,7 +4,7 @@ import { ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip, Respon
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
-    const pointData = payload.find(p => p.name.includes('value_'))?.payload;
+    const pointData = payload.find(p => p.payload.value !== null && p.payload.value !== undefined)?.payload;
     if (!pointData) return null;
 
     return (
@@ -44,12 +44,17 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
             return;
         }
 
-        const firstGapDate = forecastGapPoints[0].date;
-        const minValueInGap = Math.min(...forecastGapPoints.map(p => p.value));
+        const startDate = forecastGapPoints[0].date;
+        const endDate = forecastGapPoints[forecastGapPoints.length - 1].date;
+        const minValue = Math.min(...forecastGapPoints.map(p => p.value));
         
+        const paymentCount = forecastGapPoints.length;
+
         onGapCheck({
-            startDate: firstGapDate,
-            minValue: minValueInGap
+            startDate: startDate,
+            endDate: endDate,
+            minValue: minValue,
+            paymentCount: paymentCount
         });
     };
 
@@ -64,17 +69,12 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
           params.append('month', selectedMonth);
         }
         const response = await axios.get(`http://localhost:5000/api/account-history/${accountNumber}`, { params });
-        
         const { actual, forecast } = response.data;
-        
         const todayBoundary = new Date();
         todayBoundary.setHours(0, 0, 0, 0);
 
         let allPoints = [...actual];
-
-        if (period === 'week') {
-            allPoints.push(...forecast);
-        }
+        if (period === 'week') { allPoints.push(...forecast); }
         allPoints.sort((a, b) => new Date(a.date) - new Date(b.date));
 
         let processedData = allPoints.map(p => ({
@@ -87,12 +87,7 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
             const lastActualIndex = processedData.findLastIndex(p => p.type === 'actual');
             if (lastActualIndex !== -1 && lastActualIndex < processedData.length - 1) {
               const lastActualPoint = processedData[lastActualIndex];
-              const bridgePoint = {
-                date: todayBoundary,
-                value: lastActualPoint.value,
-                type: 'forecast',
-                isBridge: true
-              };
+              const bridgePoint = { date: todayBoundary, value: lastActualPoint.value, type: 'forecast', isBridge: true };
               processedData.splice(lastActualIndex + 1, 0, bridgePoint);
             }
         }
@@ -104,7 +99,7 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
         }));
 
         setChartData(finalData);
-        analyzeAndReportGap(finalData);
+        analyzeAndReportGap(processedData);
 
       } catch (err) {
         setError("Не удалось загрузить данные для графика.");
@@ -126,9 +121,7 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
     const bottom = Math.floor(yMin / 30000) * 30000;
     const step = 30000;
     const ticks = [];
-    for (let i = top; i >= bottom; i -= step) {
-      ticks.push(i);
-    }
+    for (let i = top; i >= bottom; i -= step) { ticks.push(i); }
     return ticks.length > 0 ? ticks : [0];
   }, [chartData]);
 
@@ -142,10 +135,7 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
 
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <ComposedChart
-        data={chartData}
-        margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-      >
+      <ComposedChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
         <defs>
           <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor={actualColor} stopOpacity={0.8}/>
@@ -158,21 +148,20 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
 
         <XAxis dataKey="date" tickFormatter={(tick) => formatXAxis(tick, period)} angle={-30} textAnchor="end" height={60} dy={10} />
         <YAxis tickFormatter={(value) => `${Math.round(value / 1000)} тыс.`} ticks={yAxisTicks} domain={[yAxisTicks[yAxisTicks.length - 1], yAxisTicks[0]]} />
-        
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip content={<CustomTooltip />} />
         <ReferenceLine y={0} stroke="#666" strokeWidth={1}/>
         
-        <Area type="monotone" dataKey="value_actual" fill="url(#colorActual)" stroke="none" baseValue={0} />
+        <Area type="monotone" dataKey="value_actual" name="value_actual" fill="url(#colorActual)" stroke="none" baseValue={0} />
         
         {period === 'week' && (
             <>
-                <Area type="monotone" dataKey="value_forecast" fill="url(#pattern-forecast)" stroke="none" baseValue={0} />
-                <Line type="monotone" dataKey="value_forecast" stroke={forecastColor} strokeWidth={2} dot={{ r: 3, fill: '#fff', stroke: forecastColor, strokeWidth: 1 }} />
+                <Area type="monotone" dataKey="value_forecast" name="value_forecast" fill="url(#pattern-forecast)" stroke="none" baseValue={0} />
+                <Line type="monotone" dataKey="value_forecast" name="value_forecast" stroke={forecastColor} strokeWidth={2} dot={{ r: 3, fill: '#fff', stroke: forecastColor, strokeWidth: 1 }} />
             </>
         )}
 
-        <Line type="monotone" dataKey="value_actual" stroke={actualColor} strokeWidth={2} activeDot={{ r: 6 }} />
+        <Line type="monotone" dataKey="value_actual" name="value_actual" stroke={actualColor} strokeWidth={2} dot={{r: 4}} activeDot={{ r: 6 }} />
       </ComposedChart>
     </ResponsiveContainer>
   );
