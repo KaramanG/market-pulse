@@ -39,8 +39,8 @@ const Header = () => {
               <span>НВ</span>
             </div>
             <div className="user-info">
-              <span className="user-name">ИП ШИППЛЕЦОВА НАТАЛИЯ ВАЛЕНТИНОВНА</span>
-              <span className="user-role">Шиплецова Н.В.</span>
+              <span className="user-name">ИП ЩИПЛЕЦОВА НАТАЛИЯ ВАЛЕНТИНОВНА</span>
+              <span className="user-role">Щиплецова Н.В.</span>
             </div>
           </div>
           
