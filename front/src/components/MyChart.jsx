@@ -119,6 +119,9 @@ function MyChart({ period, selectedMonth, dataVersion }) {
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
   if (chartData.length === 0) return <div style={{ textAlign: 'center', padding: '50px' }}>Нет данных для отображения.</div>;
   
+  const actualColor = "#0d47a1";
+  const forecastColor = "#3F51B5";
+
   return (
     <ResponsiveContainer width="100%" height={400}>
       <ComposedChart
@@ -127,11 +130,12 @@ function MyChart({ period, selectedMonth, dataVersion }) {
       >
         <defs>
           <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#0078d7" stopOpacity={0.7}/>
-            <stop offset="95%" stopColor="#0078d7" stopOpacity={0.1}/>
+            <stop offset="5%" stopColor={actualColor} stopOpacity={0.8}/>
+            <stop offset="95%" stopColor={actualColor} stopOpacity={0.3}/>
           </linearGradient>
-          <pattern id="pattern-stripe" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <rect width="4" height="8" transform="translate(0,0)" fill="#0078d7" fillOpacity="0.4"></rect>
+          
+          <pattern id="pattern-forecast" width="12" height="8" patternUnits="userSpaceOnUse">
+            <rect width="3" height="8" fill={forecastColor} fillOpacity="0.9"></rect>
           </pattern>
         </defs>
 
@@ -151,14 +155,13 @@ function MyChart({ period, selectedMonth, dataVersion }) {
         <ReferenceLine y={0} stroke="#666" strokeWidth={1}/>
         
         <Area type="monotone" dataKey="value_actual" name="value_actual" fill="url(#colorActual)" stroke="none" baseValue={0} />
-        
-        <Area type="monotone" dataKey="value_forecast" name="value_forecast" fill="url(#pattern-stripe)" stroke="none" baseValue={0} />
+        <Area type="monotone" dataKey="value_forecast" name="value_forecast" fill="url(#pattern-forecast)" stroke="none" baseValue={0} />
 
         <Line 
             type="monotone" 
             dataKey="value_actual"
             name="value_actual"
-            stroke="#005a9e" 
+            stroke={actualColor} 
             strokeWidth={2} 
             activeDot={{ r: 6 }}
         />
@@ -166,9 +169,9 @@ function MyChart({ period, selectedMonth, dataVersion }) {
             type="monotone"
             dataKey="value_forecast"
             name="value_forecast"
-            stroke="#005a9e" 
+            stroke={forecastColor} 
             strokeWidth={2} 
-            dot={{ r: 3, fill: '#fff', stroke: '#005a9e', strokeWidth: 1 }} 
+            dot={{ r: 3, fill: '#fff', stroke: forecastColor, strokeWidth: 1 }} 
             activeDot={{ r: 6, strokeWidth: 1 }} 
         />
 
