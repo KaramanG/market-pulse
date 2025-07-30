@@ -28,13 +28,31 @@ const formatXAxis = (tickItem, period) => {
     return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
 };
 
-
-function MyChart({ period, selectedMonth, dataVersion }) {
+function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
   const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const analyzeAndReportGap = (data) => {
+        if (!onGapCheck) return;
+
+        const forecastGapPoints = data.filter(p => p.type === 'forecast' && p.value < 0);
+
+        if (forecastGapPoints.length === 0) {
+            onGapCheck(null);
+            return;
+        }
+
+        const firstGapDate = forecastGapPoints[0].date;
+        const minValueInGap = Math.min(...forecastGapPoints.map(p => p.value));
+        
+        onGapCheck({
+            startDate: firstGapDate,
+            minValue: minValueInGap
+        });
+    };
+
     const fetchData = async () => {
       setLoading(true);
       setError(null);
@@ -52,12 +70,12 @@ function MyChart({ period, selectedMonth, dataVersion }) {
         const todayBoundary = new Date();
         todayBoundary.setHours(0, 0, 0, 0);
 
-        let pointsToProcess = [...actual];
-        if (period === 'week') {
-            pointsToProcess = [...pointsToProcess, ...forecast];
-        }
+        let allPoints = [...actual];
 
-        const allPoints = pointsToProcess.sort((a, b) => new Date(a.date) - new Date(b.date));
+        if (period === 'week') {
+            allPoints.push(...forecast);
+        }
+        allPoints.sort((a, b) => new Date(a.date) - new Date(b.date));
 
         let processedData = allPoints.map(p => ({
           ...p,
@@ -67,17 +85,14 @@ function MyChart({ period, selectedMonth, dataVersion }) {
         
         if (period === 'week') {
             const lastActualIndex = processedData.findLastIndex(p => p.type === 'actual');
-
             if (lastActualIndex !== -1 && lastActualIndex < processedData.length - 1) {
               const lastActualPoint = processedData[lastActualIndex];
-              
               const bridgePoint = {
                 date: todayBoundary,
                 value: lastActualPoint.value,
                 type: 'forecast',
                 isBridge: true
               };
-    
               processedData.splice(lastActualIndex + 1, 0, bridgePoint);
             }
         }
@@ -89,6 +104,7 @@ function MyChart({ period, selectedMonth, dataVersion }) {
         }));
 
         setChartData(finalData);
+        analyzeAndReportGap(finalData);
 
       } catch (err) {
         setError("Не удалось загрузить данные для графика.");
@@ -98,27 +114,22 @@ function MyChart({ period, selectedMonth, dataVersion }) {
       }
     };
     fetchData();
-  }, [period, selectedMonth, dataVersion]);
+  }, [period, selectedMonth, dataVersion, onGapCheck]);
 
   const yAxisTicks = useMemo(() => {
     if (chartData.length === 0) return [];
-    const yValues = chartData.map(p => p.value).filter(v => v !== null && v !== undefined);
-    if (yValues.length === 0) return [0];
-    const yMax = Math.max(...yValues);
-    const yMin = Math.min(...yValues);
-    const top = Math.ceil(yMax / 10000) * 10000;
-    const bottom = Math.floor(yMin / 10000) * 10000;
+    const allValues = chartData.map(p => p.value).filter(v => v !== null && v !== undefined);
+    if (allValues.length === 0) return [0];
+    const yMax = Math.max(...allValues, 0);
+    const yMin = Math.min(...allValues, 0);
+    const top = Math.ceil(yMax / 30000) * 30000;
+    const bottom = Math.floor(yMin / 30000) * 30000;
+    const step = 30000;
     const ticks = [];
-    const range = Math.max(Math.abs(top), Math.abs(bottom));
-    const step = Math.ceil((range / 4) / 10000) * 10000;
-    if (step === 0) return [0];
-    for (let i = 0; i <= top + step; i += step) {
-      if (i <= top * 1.1) ticks.push(i);
+    for (let i = top; i >= bottom; i -= step) {
+      ticks.push(i);
     }
-    for (let i = -step; i >= bottom - step; i -= step) {
-      if (i >= bottom * 1.1) ticks.push(i);
-    }
-    return [...new Set(ticks)].sort((a, b) => a - b);
+    return ticks.length > 0 ? ticks : [0];
   }, [chartData]);
 
 
@@ -140,56 +151,31 @@ function MyChart({ period, selectedMonth, dataVersion }) {
             <stop offset="5%" stopColor={actualColor} stopOpacity={0.8}/>
             <stop offset="95%" stopColor={actualColor} stopOpacity={0.3}/>
           </linearGradient>
-          
           <pattern id="pattern-forecast" width="12" height="8" patternUnits="userSpaceOnUse">
             <rect width="3" height="8" fill={forecastColor} fillOpacity="0.9"></rect>
           </pattern>
         </defs>
 
-        <XAxis 
-          dataKey="date" 
-          tickFormatter={(tick) => formatXAxis(tick, period)}
-          angle={-30} textAnchor="end" height={60} dy={10}
-        />
-        <YAxis 
-            tickFormatter={(value) => `${Math.round(value / 1000)} тыс.`} 
-            ticks={yAxisTicks}
-            domain={[yAxisTicks[0], yAxisTicks[yAxisTicks.length - 1]]}
-        />
+        <XAxis dataKey="date" tickFormatter={(tick) => formatXAxis(tick, period)} angle={-30} textAnchor="end" height={60} dy={10} />
+        <YAxis tickFormatter={(value) => `${Math.round(value / 1000)} тыс.`} ticks={yAxisTicks} domain={[yAxisTicks[yAxisTicks.length - 1], yAxisTicks[0]]} />
         
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip content={<CustomTooltip />} />
         <ReferenceLine y={0} stroke="#666" strokeWidth={1}/>
         
-        <Area type="monotone" dataKey="value_actual" name="value_actual" fill="url(#colorActual)" stroke="none" baseValue={0} />
-
+        <Area type="monotone" dataKey="value_actual" fill="url(#colorActual)" stroke="none" baseValue={0} />
+        
         {period === 'week' && (
             <>
-                <Area type="monotone" dataKey="value_forecast" name="value_forecast" fill="url(#pattern-forecast)" stroke="none" baseValue={0} />
-                <Line 
-                    type="monotone"
-                    dataKey="value_forecast"
-                    name="value_forecast"
-                    stroke={forecastColor} 
-                    strokeWidth={2} 
-                    dot={{ r: 3, fill: '#fff', stroke: forecastColor, strokeWidth: 1 }} 
-                    activeDot={{ r: 6, strokeWidth: 1 }} 
-                />
+                <Area type="monotone" dataKey="value_forecast" fill="url(#pattern-forecast)" stroke="none" baseValue={0} />
+                <Line type="monotone" dataKey="value_forecast" stroke={forecastColor} strokeWidth={2} dot={{ r: 3, fill: '#fff', stroke: forecastColor, strokeWidth: 1 }} />
             </>
         )}
 
-        <Line 
-            type="monotone" 
-            dataKey="value_actual"
-            name="value_actual"
-            stroke={actualColor} 
-            strokeWidth={2} 
-            activeDot={{ r: 6 }}
-        />
-
+        <Line type="monotone" dataKey="value_actual" stroke={actualColor} strokeWidth={2} activeDot={{ r: 6 }} />
       </ComposedChart>
     </ResponsiveContainer>
   );
 }
 
-export default MyChart
+export default MyChart;

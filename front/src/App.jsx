@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import './styles/index.css';
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
 import MyChart from './components/MyChart';
 import ChartFilters from './components/ChartFilters';
 import SchedulePaymentModal from './components/SchedulePaymentModal';
 import FaqSection from './components/FaqSection';
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
+import CashGapNotification from './components/CashGapNotification';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -26,6 +27,7 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [dataVersion, setDataVersion] = useState(0);
+  const [gapInfo, setGapInfo] = useState(null);
 
   const handleDataUpdate = () => {
     setDataVersion(currentVersion => currentVersion + 1);
@@ -38,24 +40,31 @@ function App() {
       <div className="content-area">
         <Sidebar />
         
-        <main className="main-section main-grid">
+        <main className="main-section">
           <div className="page-content">            
-            <section className="view-switcher-section" aria-label="Переключатель вида">
-              <h2 className="view-title">Обзор</h2>
-              <nav className="tabs-nav">
-                {tabs.map((tabName, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    className={`tab-button ${activeTab === index ? 'active' : ''}`}
-                    onClick={() => setActiveTab(index)}
-                  >
-                    {tabName}
-                  </button>
-                ))}
-              </nav>
-            </section>
+            
+            <div className="page-header-container">
+              <div className="view-switcher-section">
+                <h2 className="view-title">Обзор</h2>
+                <nav className="tabs-nav">
+                  {tabs.map((tabName, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      className={`tab-button ${activeTab === index ? 'active' : ''}`}
+                      onClick={() => setActiveTab(index)}
+                    >
+                      {tabName}
+                    </button>
+                  ))}
+                </nav>
+              </div>
 
+              <div className="notification-wrapper">
+                {period === 'week' && <CashGapNotification gapInfo={gapInfo} />}
+              </div>
+            </div>
+            
             <ChartFilters 
               period={period}
               setPeriod={setPeriod}
@@ -64,12 +73,13 @@ function App() {
               onScheduleClick={() => setIsModalOpen(true)}
             />
       
-            <section className="chart-section" aria-label="Финансовая аналитика">
+            <section className="chart-section">
               <div className="chart-box">
                 <MyChart 
                   period={period} 
                   selectedMonth={selectedMonth} 
-                  dataVersion={dataVersion} 
+                  dataVersion={dataVersion}
+                  onGapCheck={setGapInfo}
                 />
               </div>
             </section>

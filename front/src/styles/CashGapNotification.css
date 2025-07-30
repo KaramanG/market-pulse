@@ -1,0 +1,39 @@
+.notification-box {
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #e0e0e0;
+}
+
+.notification-icon {
+    margin-right: 15px;
+    font-size: 24px;
+}
+
+.notification-box.ok {
+    background-color: #f6ffed;
+    border-color: #b7eb8f;
+}
+
+.notification-box.ok .notification-icon {
+    color: #52c41a;
+}
+
+.notification-box.warning {
+    background-color: #fffbe6;
+    border-color: #ffe58f;
+}
+
+.notification-box.warning .notification-icon {
+    color: #faad14;
+}
+
+.notification-box p {
+    margin: 0;
+    font-weight: bold;
+}
+
+.notification-box small {
+    color: #555;
+}
