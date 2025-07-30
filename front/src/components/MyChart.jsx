@@ -52,7 +52,12 @@ function MyChart({ period, selectedMonth, dataVersion }) {
         const todayBoundary = new Date();
         todayBoundary.setHours(0, 0, 0, 0);
 
-        const allPoints = [...actual, ...forecast].sort((a, b) => new Date(a.date) - new Date(b.date));
+        let pointsToProcess = [...actual];
+        if (period === 'week') {
+            pointsToProcess = [...pointsToProcess, ...forecast];
+        }
+
+        const allPoints = pointsToProcess.sort((a, b) => new Date(a.date) - new Date(b.date));
 
         let processedData = allPoints.map(p => ({
           ...p,
@@ -60,19 +65,21 @@ function MyChart({ period, selectedMonth, dataVersion }) {
           type: new Date(p.date) < todayBoundary ? 'actual' : 'forecast'
         }));
         
-        const lastActualIndex = processedData.findLastIndex(p => p.type === 'actual');
+        if (period === 'week') {
+            const lastActualIndex = processedData.findLastIndex(p => p.type === 'actual');
 
-        if (lastActualIndex !== -1 && lastActualIndex < processedData.length - 1) {
-          const lastActualPoint = processedData[lastActualIndex];
-          
-          const bridgePoint = {
-            date: todayBoundary,
-            value: lastActualPoint.value,
-            type: 'forecast',
-            isBridge: true
-          };
-
-          processedData.splice(lastActualIndex + 1, 0, bridgePoint);
+            if (lastActualIndex !== -1 && lastActualIndex < processedData.length - 1) {
+              const lastActualPoint = processedData[lastActualIndex];
+              
+              const bridgePoint = {
+                date: todayBoundary,
+                value: lastActualPoint.value,
+                type: 'forecast',
+                isBridge: true
+              };
+    
+              processedData.splice(lastActualIndex + 1, 0, bridgePoint);
+            }
         }
         
         const finalData = processedData.map(p => ({
@@ -155,7 +162,21 @@ function MyChart({ period, selectedMonth, dataVersion }) {
         <ReferenceLine y={0} stroke="#666" strokeWidth={1}/>
         
         <Area type="monotone" dataKey="value_actual" name="value_actual" fill="url(#colorActual)" stroke="none" baseValue={0} />
-        <Area type="monotone" dataKey="value_forecast" name="value_forecast" fill="url(#pattern-forecast)" stroke="none" baseValue={0} />
+
+        {period === 'week' && (
+            <>
+                <Area type="monotone" dataKey="value_forecast" name="value_forecast" fill="url(#pattern-forecast)" stroke="none" baseValue={0} />
+                <Line 
+                    type="monotone"
+                    dataKey="value_forecast"
+                    name="value_forecast"
+                    stroke={forecastColor} 
+                    strokeWidth={2} 
+                    dot={{ r: 3, fill: '#fff', stroke: forecastColor, strokeWidth: 1 }} 
+                    activeDot={{ r: 6, strokeWidth: 1 }} 
+                />
+            </>
+        )}
 
         <Line 
             type="monotone" 
@@ -165,19 +186,10 @@ function MyChart({ period, selectedMonth, dataVersion }) {
             strokeWidth={2} 
             activeDot={{ r: 6 }}
         />
-        <Line 
-            type="monotone"
-            dataKey="value_forecast"
-            name="value_forecast"
-            stroke={forecastColor} 
-            strokeWidth={2} 
-            dot={{ r: 3, fill: '#fff', stroke: forecastColor, strokeWidth: 1 }} 
-            activeDot={{ r: 6, strokeWidth: 1 }} 
-        />
 
       </ComposedChart>
     </ResponsiveContainer>
   );
 }
 
-export default MyChart;
+export default MyChart
