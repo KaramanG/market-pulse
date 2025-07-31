@@ -48,7 +48,7 @@ async function run() {
             res.status(500).send("Ошибка на сервере при создании платежа.");
         }
     });
-
+    
     app.get('/api/account-history/:accountNumber', async (req, res) => {
       try {
         const accountNumber = parseInt(req.params.accountNumber);
@@ -132,25 +132,20 @@ async function run() {
                 payment_date: { $gte: forecastStartDate }
             }).sort({ payment_date: 1 }).toArray();
         
-            if (plannedPayments.length > 0) {
-                let currentForecastBalance = lastKnownBalance;
-                const dailyForecasts = {};
-        
-                plannedPayments.forEach(p => {
-                    const dateStr = p.payment_date.toISOString().split('T')[0];
-                    if (!dailyForecasts[dateStr]) {
-                        dailyForecasts[dateStr] = 0;
-                    }
-                    dailyForecasts[dateStr] += (p.transaction_type === '+' ? p.amount : -p.amount);
+            let currentForecastBalance = lastKnownBalance;
+
+            plannedPayments.forEach(payment => {
+                const change = payment.transaction_type === '+' ? payment.amount : -payment.amount;
+                currentForecastBalance += change;
+
+                forecastData.push({
+                    date: payment.payment_date,
+                    value: currentForecastBalance,
+                    type: 'forecast',
+                    purpose: payment.purpose,
+                    transactionAmount: change
                 });
-                
-                const sortedForecastDates = Object.keys(dailyForecasts).sort();
-        
-                sortedForecastDates.forEach(dateStr => {
-                    currentForecastBalance += dailyForecasts[dateStr];
-                    forecastData.push({ date: new Date(dateStr), value: currentForecastBalance, type: 'forecast' });
-                });
-            }
+            });
         }
         
         res.json({

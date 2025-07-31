@@ -46,18 +46,20 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
 
         const startDate = forecastGapPoints[0].date;
         const endDate = forecastGapPoints[forecastGapPoints.length - 1].date;
-        const minValue = Math.min(...forecastGapPoints.map(p => p.value));
         
-        const paymentCount = forecastGapPoints.length;
+        const paymentsForDetails = forecastGapPoints.map(point => ({
+            date: point.date,
+            description: point.purpose || 'Прогнозный платеж',
+            amount: point.transactionAmount || point.value
+        }));
 
         onGapCheck({
             startDate: startDate,
             endDate: endDate,
-            minValue: minValue,
-            paymentCount: paymentCount
+            payments: paymentsForDetails
         });
     };
-
+    
     const fetchData = async () => {
       setLoading(true);
       setError(null);
@@ -87,7 +89,7 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
             const lastActualIndex = processedData.findLastIndex(p => p.type === 'actual');
             if (lastActualIndex !== -1 && lastActualIndex < processedData.length - 1) {
               const lastActualPoint = processedData[lastActualIndex];
-              const bridgePoint = { date: todayBoundary, value: lastActualPoint.value, type: 'forecast', isBridge: true };
+              const bridgePoint = { ...lastActualPoint, date: todayBoundary, type: 'forecast', isBridge: true };
               processedData.splice(lastActualIndex + 1, 0, bridgePoint);
             }
         }
@@ -108,6 +110,7 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
         setLoading(false);
       }
     };
+
     fetchData();
   }, [period, selectedMonth, dataVersion, onGapCheck]);
 
@@ -145,22 +148,18 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
             <rect width="3" height="8" fill={forecastColor} fillOpacity="0.9"></rect>
           </pattern>
         </defs>
-
         <XAxis dataKey="date" tickFormatter={(tick) => formatXAxis(tick, period)} angle={-30} textAnchor="end" height={60} dy={10} />
         <YAxis tickFormatter={(value) => `${Math.round(value / 1000)} тыс.`} ticks={yAxisTicks} domain={[yAxisTicks[yAxisTicks.length - 1], yAxisTicks[0]]} />
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip content={<CustomTooltip />} />
         <ReferenceLine y={0} stroke="#666" strokeWidth={1}/>
-        
         <Area type="monotone" dataKey="value_actual" name="value_actual" fill="url(#colorActual)" stroke="none" baseValue={0} />
-        
         {period === 'week' && (
             <>
                 <Area type="monotone" dataKey="value_forecast" name="value_forecast" fill="url(#pattern-forecast)" stroke="none" baseValue={0} />
                 <Line type="monotone" dataKey="value_forecast" name="value_forecast" stroke={forecastColor} strokeWidth={2} dot={{ r: 3, fill: '#fff', stroke: forecastColor, strokeWidth: 1 }} />
             </>
         )}
-
         <Line type="monotone" dataKey="value_actual" name="value_actual" stroke={actualColor} strokeWidth={2} dot={{r: 4}} activeDot={{ r: 6 }} />
       </ComposedChart>
     </ResponsiveContainer>
