@@ -1,9 +1,8 @@
 import React from 'react';
 import '../styles/RecommendationsSection.css';
 
-// Иконка для заголовка
 const AdvisorIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
         <path d="M12 16v-4"></path>
         <path d="M12 8h.01"></path>
@@ -19,46 +18,57 @@ function RecommendationsSection({ gapInfo }) {
         return null;
     }
 
-    // Входные данные
-    const cashGap = Math.abs(gapInfo.minValue); // Размер кассового разрыва
+    // --- Входные данные
+    const cashGap = Math.abs(gapInfo.minValue); // Размер кассового разрыва (КР)
     const MARGIN = 0.20;                        // Маржинальность бизнеса клиента (20%)
     const CREDIT_RATE = 0.18;                   // Годовая ставка по кредиту Альфа-Банка (18%)
     const SUPPLIER_DISCOUNT = 0.05;             // Скидка от поставщика за оплату в срок (5%)
     
     // Моделируем данные по депозиту клиента
     const DEPOSIT_INFO = {
-        amount: 150000,                         // ОБЩАЯ СУММА НА ВКЛАДЕ. Необходима для проверки возможности сценария.
+        amount: 150000,
         rate: 0.12,                             // Годовая ставка по депозиту (12%)
         remainingDays: 180,                     // Сколько дней осталось до конца вклада
         earlyWithdrawalRate: 0.0001           // Ставка до востребования (0.01%)
     };
 
-    // УНИВЕРСАЛЬНЫЕ РАСЧЕТЫ ПО СЦЕНАРИЯМ
-
     const lossFromWorkingCapital = cashGap * MARGIN;
     const lossFromCredit = cashGap * CREDIT_RATE;
 
-    // Расчет потерь по вкладу
     const expectedInterestOnGapAmount = cashGap * DEPOSIT_INFO.rate * (DEPOSIT_INFO.remainingDays / 365);
     const earlyWithdrawalInterestOnGapAmount = cashGap * DEPOSIT_INFO.earlyWithdrawalRate * (DEPOSIT_INFO.remainingDays / 365);
     const lossFromDeposit = expectedInterestOnGapAmount - earlyWithdrawalInterestOnGapAmount;
-    
-    // Проверяем, возможен ли вообще сценарий со вкладом
-    const isDepositScenarioPossible = DEPOSIT_INFO.amount >= cashGap;
 
     const lossFromDelay = cashGap * SUPPLIER_DISCOUNT;
     const savingsFromCreditHoliday = (cashGap * CREDIT_RATE) / 12;
 
-    // Собираем сценарии в массив
-    let scenarios = [
-        { name: 'Отсрочка по кредиту', loss: 0, note: `Экономия до ${formatCurrency(savingsFromCreditHoliday)}/мес. Требует одобрения.` },
-        { name: 'Отсрочка поставщику', loss: lossFromDelay },
-        // Условно добавляем сценарий с вкладом, только если он возможен
-        isDepositScenarioPossible && { name: 'Снятие со вклада', loss: lossFromDeposit },
-        { name: 'Кредит Альфа-Банка', loss: lossFromCredit },
-        { name: 'Изъятие оборотных средств', loss: lossFromWorkingCapital },
-    ].filter(Boolean) // Убираем возможные "пустые" значения из массива
-     .sort((a, b) => a.loss - b.loss); // Сортируем по возрастанию потерь
+    const scenarios = [
+        { 
+            name: 'Отсрочка по кредиту', 
+            loss: 0, 
+            note: `Экономия до ${formatCurrency(savingsFromCreditHoliday)}/мес (при ставке ${CREDIT_RATE * 100}%). Требует одобрения.` 
+        },
+        { 
+            name: 'Отсрочка поставщику', 
+            loss: lossFromDelay,
+            note: `При потере скидки за срочность в ${SUPPLIER_DISCOUNT * 100}%.`
+        },
+        { 
+            name: 'Снятие со вклада', 
+            loss: lossFromDeposit,
+            note: `Потеря процентов по ставке ${DEPOSIT_INFO.rate * 100}% годовых.`
+        },
+        { 
+            name: 'Кредит Альфа-Банка', 
+            loss: lossFromCredit,
+            note: `Годовая стоимость при ставке ${CREDIT_RATE * 100}%.`
+        },
+        { 
+            name: 'Изъятие оборотных средств', 
+            loss: lossFromWorkingCapital,
+            note: `Упущенная выгода при маржинальности ${MARGIN * 100}%.`
+        },
+    ].sort((a, b) => a.loss - b.loss); // Сортируем по возрастанию потерь
 
     return (
         <section className="recommendations-container">
