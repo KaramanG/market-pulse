@@ -85,7 +85,7 @@ function CashGapNotification({ gapInfo }) {
               <tr>
                 <th>Дата</th>
                 <th>Назначение</th>
-                <th>Размер</th>
+                <th>Сумма</th>
               </tr>
             </thead>
             <tbody>

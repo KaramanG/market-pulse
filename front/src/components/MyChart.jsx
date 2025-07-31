@@ -84,14 +84,17 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
         const response = await axios.get(`http://localhost:5000/api/account-history/${accountNumber}`, { params });
         const { actual, forecast } = response.data;
         
-        let allPoints = [...actual];
-        if (period === 'week') { allPoints.push(...forecast); }
-        allPoints.sort((a, b) => new Date(a.date) - new Date(b.date));
+        const actualData = actual.map(p => ({ ...p, type: 'actual' }));
+        const forecastData = forecast.map(p => ({ ...p, type: 'forecast' }));
 
+        let allPoints = [...actualData];
+        if (period === 'week') { 
+            allPoints.push(...forecastData); 
+        }
+        allPoints.sort((a, b) => new Date(a.date) - new Date(b.date));
         let processedData = allPoints.map(p => ({
           ...p,
           date: new Date(p.date), 
-          type: new Date(p.date) < new Date().setHours(0,0,0,0) ? 'actual' : 'forecast'
         }));
         
         if (period === 'week') {
@@ -138,6 +141,12 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
   }, [chartData]);
 
 
+  const hasForecastData = useMemo(() => 
+    chartData.some(p => p.value_forecast !== null),
+    [chartData]
+  );
+
+
   if (loading) return <div>Загрузка графика...</div>;
   if (error) return <div style={{ color: 'red' }}>{error}</div>;
   if (chartData.length === 0) return <div style={{ textAlign: 'center', padding: '50px' }}>Нет данных для отображения.</div>;
@@ -162,8 +171,8 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
           <YAxis tickFormatter={(value) => `${Math.round(value / 1000)} тыс.`} ticks={yAxisTicks} domain={[yAxisTicks[yAxisTicks.length - 1], yAxisTicks[0]]} />
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip content={<CustomTooltip />} />
-          
           <ReferenceLine y={0} stroke="#666" strokeWidth={1}/>
+          
           <Area type="monotone" dataKey="value_actual" fill="url(#colorActual)" stroke="none" baseValue={0} />
           
           {period === 'week' && (
@@ -177,7 +186,7 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
         </ComposedChart>
       </ResponsiveContainer>
       
-      {renderCustomLegend()}
+      {hasForecastData && renderCustomLegend()}
     </div>
   );
 }
