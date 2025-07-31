@@ -7,6 +7,7 @@ import ChartFilters from './components/ChartFilters';
 import SchedulePaymentModal from './components/SchedulePaymentModal';
 import FaqSection from './components/FaqSection';
 import CashGapNotification from './components/CashGapNotification';
+import RecommendationsSection from './components/RecommendationsSection';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -83,6 +84,9 @@ function App() {
                 />
               </div>
             </section>
+
+            {/* Условный рендеринг блока рекомендаций */}
+            {gapInfo && <RecommendationsSection gapInfo={gapInfo} />}
 
             <FaqSection />
           </div>

@@ -112,41 +112,56 @@ async function run() {
         const historicalData = await transactions.aggregate(historyPipeline).toArray();
         let forecastData = [];
 
-        const todayForForecast = new Date();
-        const currentMonthStr = `${todayForForecast.getFullYear()}-${String(todayForForecast.getMonth() + 1).padStart(2, '0')}`;
-        const shouldCreateForecast = period === 'week' || (period === 'month' && month === currentMonthStr);
-        
-        if (shouldCreateForecast) {
-            let lastKnownBalance = balanceAtPeriodStart;
-            if (historicalData.length > 0) {
-                const lastActualDataPoint = historicalData[historicalData.length - 1];
-                if (new Date(lastActualDataPoint.date) <= todayForForecast) {
-                    lastKnownBalance = lastActualDataPoint.value;
-                }
+        let lastKnownBalance = balanceAtPeriodStart;
+        if (historicalData.length > 0) {
+            const lastActualDataPoint = historicalData[historicalData.length - 1];
+            if (new Date(lastActualDataPoint.date) <= new Date()) {
+                lastKnownBalance = lastActualDataPoint.value;
             }
-        
-            const forecastStartDate = new Date();
-            forecastStartDate.setHours(0, 0, 0, 0);
-        
-            const plannedPayments = await planned_payments.find({
-                payment_date: { $gte: forecastStartDate }
-            }).sort({ payment_date: 1 }).toArray();
-        
-            let currentForecastBalance = lastKnownBalance;
-
-            plannedPayments.forEach(payment => {
-                const change = payment.transaction_type === '+' ? payment.amount : -payment.amount;
-                currentForecastBalance += change;
-
-                forecastData.push({
-                    date: payment.payment_date,
-                    value: currentForecastBalance,
-                    type: 'forecast',
-                    purpose: payment.purpose,
-                    transactionAmount: change
-                });
-            });
         }
+    
+        const forecastStartDate = new Date();
+        forecastStartDate.setHours(0, 0, 0, 0);
+    
+        const plannedPayments = await planned_payments.find({
+            payment_date: { $gte: forecastStartDate }
+        }).sort({ payment_date: 1 }).toArray();
+    
+        const dailyAggregates = {};
+
+        plannedPayments.forEach(payment => {
+            const dateStr = payment.payment_date.toISOString().split('T')[0];
+            
+            if (!dailyAggregates[dateStr]) {
+                dailyAggregates[dateStr] = {
+                    totalChange: 0,
+                    purposes: [],
+                    transactionAmounts: []
+                };
+            }
+
+            const change = payment.transaction_type === '+' ? payment.amount : -payment.amount;
+            dailyAggregates[dateStr].totalChange += change;
+            dailyAggregates[dateStr].purposes.push(payment.purpose);
+            dailyAggregates[dateStr].transactionAmounts.push(change);
+        });
+
+        let currentForecastBalance = lastKnownBalance;
+        
+        const sortedDates = Object.keys(dailyAggregates).sort();
+
+        sortedDates.forEach(dateStr => {
+            const dayData = dailyAggregates[dateStr];
+            currentForecastBalance += dayData.totalChange;
+
+            forecastData.push({
+                date: new Date(dateStr),
+                value: currentForecastBalance,
+                type: 'forecast',
+                purpose: dayData.purposes.join(', '),
+                transactionAmount: dayData.totalChange
+            });
+        });
         
         res.json({
             actual: historicalData,

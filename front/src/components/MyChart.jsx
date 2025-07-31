@@ -50,6 +50,7 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Возвращаем вычисление и передачу размера кассового разрыва ---
     const analyzeAndReportGap = (data) => {
         if (!onGapCheck) return;
         const forecastGapPoints = data.filter(p => p.type === 'forecast' && p.value < 0);
@@ -57,17 +58,23 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
             onGapCheck(null);
             return;
         }
+
         const startDate = forecastGapPoints[0].date;
         const endDate = forecastGapPoints[forecastGapPoints.length - 1].date;
+        const minValue = Math.min(...forecastGapPoints.map(p => p.value)); // Вычисляем пиковый разрыв
+
         const paymentsForDetails = forecastGapPoints.map(point => ({
             date: point.date,
             description: point.purpose || 'Прогнозный платеж',
             amount: point.transactionAmount || point.value
         }));
+
+        // Передаем minValue наверх, чтобы блок рекомендаций мог работать
         onGapCheck({
             startDate: startDate,
             endDate: endDate,
-            payments: paymentsForDetails
+            payments: paymentsForDetails,
+            minValue: minValue 
         });
     };
     
@@ -92,6 +99,7 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
             allPoints.push(...forecastData); 
         }
         allPoints.sort((a, b) => new Date(a.date) - new Date(b.date));
+        
         let processedData = allPoints.map(p => ({
           ...p,
           date: new Date(p.date), 
@@ -101,8 +109,13 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
             const lastActualIndex = processedData.findLastIndex(p => p.type === 'actual');
             if (lastActualIndex !== -1 && lastActualIndex < processedData.length - 1) {
               const lastActualPoint = processedData[lastActualIndex];
-              const bridgePoint = { ...lastActualPoint, date: new Date().setHours(0,0,0,0), type: 'forecast', isBridge: true };
-              processedData.splice(lastActualIndex + 1, 0, bridgePoint);
+              const nextPointDate = new Date(processedData[lastActualIndex + 1].date);
+              const bridgeDate = new Date(new Date().setHours(0,0,0,0));
+
+              if(nextPointDate.getTime() !== bridgeDate.getTime()){
+                const bridgePoint = { ...lastActualPoint, date: bridgeDate, type: 'forecast', isBridge: true };
+                processedData.splice(lastActualIndex + 1, 0, bridgePoint);
+              }
             }
         }
         
