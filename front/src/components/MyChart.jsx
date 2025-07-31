@@ -50,7 +50,6 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Возвращаем вычисление и передачу размера кассового разрыва ---
     const analyzeAndReportGap = (data) => {
         if (!onGapCheck) return;
         const forecastGapPoints = data.filter(p => p.type === 'forecast' && p.value < 0);
@@ -61,15 +60,14 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
 
         const startDate = forecastGapPoints[0].date;
         const endDate = forecastGapPoints[forecastGapPoints.length - 1].date;
-        const minValue = Math.min(...forecastGapPoints.map(p => p.value)); // Вычисляем пиковый разрыв
+        const minValue = Math.min(...forecastGapPoints.map(p => p.value));
 
         const paymentsForDetails = forecastGapPoints.map(point => ({
             date: point.date,
             description: point.purpose || 'Прогнозный платеж',
             amount: point.transactionAmount || point.value
         }));
-
-        // Передаем minValue наверх, чтобы блок рекомендаций мог работать
+        
         onGapCheck({
             startDate: startDate,
             endDate: endDate,
@@ -139,18 +137,38 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
     fetchData();
   }, [period, selectedMonth, dataVersion, onGapCheck]);
 
-  const yAxisTicks = useMemo(() => {
-    if (chartData.length === 0) return [];
+  const yAxisConfig = useMemo(() => {
+    if (chartData.length === 0) {
+        return { domain: [0, 0], ticks: [0] };
+    }
     const allValues = chartData.map(p => p.value).filter(v => v !== null && v !== undefined);
-    if (allValues.length === 0) return [0];
-    const yMax = Math.max(...allValues, 0);
-    const yMin = Math.min(...allValues, 0);
-    const top = Math.ceil(yMax / 30000) * 30000;
-    const bottom = Math.floor(yMin / 30000) * 30000;
-    const step = 30000;
-    const ticks = [];
-    for (let i = top; i >= bottom; i -= step) { ticks.push(i); }
-    return ticks.length > 0 ? ticks : [0];
+    if (allValues.length === 0) {
+        return { domain: [0, 0], ticks: [0] };
+    }
+
+    const yMax = Math.max(...allValues);
+    const yMin = Math.min(...allValues);
+    
+    const step = 100000; 
+
+    const top = Math.ceil(Math.max(yMax, 0) / step) * step;
+    const bottom = Math.floor(Math.min(yMin, 0) / step) * step;
+    const ticksSet = new Set();
+    
+    for (let i = top; i >= bottom; i -= step) {
+        ticksSet.add(i);
+    }
+
+    if (top > 0 && bottom < 0) {
+        ticksSet.add(0);
+    }
+    
+    const ticksArray = Array.from(ticksSet).sort((a, b) => a - b);
+
+    return {
+        domain: [bottom, top],
+        ticks: ticksArray
+    };
   }, [chartData]);
 
 
@@ -181,10 +199,16 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
             </pattern>
           </defs>
           <XAxis dataKey="date" tickFormatter={(tick) => formatXAxis(tick, period)} angle={-30} textAnchor="end" height={60} dy={10} />
-          <YAxis tickFormatter={(value) => `${Math.round(value / 1000)} тыс.`} ticks={yAxisTicks} domain={[yAxisTicks[yAxisTicks.length - 1], yAxisTicks[0]]} />
+          
+          <YAxis 
+            tickFormatter={(value) => `${Math.round(value / 1000)} тыс.`} 
+            domain={yAxisConfig.domain}
+            ticks={yAxisConfig.ticks}
+          />
+          
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip content={<CustomTooltip />} />
-          <ReferenceLine y={0} stroke="#666" strokeWidth={1}/>
+          <ReferenceLine y={0} stroke="#666" strokeWidth={1} strokeOpacity={0.8} />
           
           <Area type="monotone" dataKey="value_actual" fill="url(#colorActual)" stroke="none" baseValue={0} />
           
