@@ -1,4 +1,3 @@
-import React from 'react';
 import '../styles/RecommendationsSection.css';
 
 const AdvisorIcon = () => (
@@ -68,7 +67,7 @@ function RecommendationsSection({ gapInfo }) {
             loss: lossFromWorkingCapital,
             note: `Упущенная выгода при маржинальности ${MARGIN * 100}%.`
         },
-    ].sort((a, b) => a.loss - b.loss); // Сортируем по возрастанию потерь
+    ].sort((a, b) => a.loss - b.loss);
 
     return (
         <section className="recommendations-container">
@@ -102,10 +101,6 @@ function RecommendationsSection({ gapInfo }) {
                         ))}
                     </tbody>
                 </table>
-            </div>
-
-            <div className="recommendations-footer">
-                <button className="recommendations-cta">Обсудить с менеджером</button>
             </div>
         </section>
     );

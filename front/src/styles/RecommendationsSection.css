@@ -30,7 +30,6 @@
     line-height: 1.6;
     color: #595959;
     margin-bottom: 24px;
-    max-width: 800px;
 }
 
 .recommendations-summary strong {
@@ -50,6 +49,10 @@
     border-bottom: 1px solid #E6E8EB;
 }
 
+.recommendations-table tr:last-child td {
+    border-bottom: none;
+}
+
 .recommendations-table th {
     font-size: 12px;
     font-weight: 700;
@@ -61,6 +64,10 @@
 .recommendations-table td {
     font-size: 16px;
     color: #333;
+}
+
+.recommendations-table .solution-column {
+    width: 100%;
 }
 
 .recommendations-table th:first-child,
@@ -97,26 +104,4 @@
     font-style: normal;
     font-size: 13px;
     line-height: 1.4;
-}
-
-.recommendations-footer {
-    margin-top: 24px;
-    text-align: right;
-}
-
-.recommendations-cta {
-    font-family: 'Styrene A LC', Arial, sans-serif;
-    background-color: #ef3124;
-    color: #fff;
-    border: none;
-    border-radius: 20px;
-    padding: 12px 24px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-}
-
-.recommendations-cta:hover {
-    background-color: #d41f13;
 }
