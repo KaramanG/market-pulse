@@ -153,5 +153,54 @@ html, body {
 .filter-select::-ms-expand { display: none; }
 .filter-select option { background-color: #ffffff; color: #000000; }
 
-.chart-section { display: flex; }
-.chart-box { width: 100%; background-color: #ffffff; border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); border: 1px solid #E6E8EB; }
+.chart-section { 
+  display: flex; 
+}
+.chart-box { 
+  width: 100%; 
+  background-color: #ffffff; 
+  border-radius: 12px; 
+  padding: 1.5rem; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
+  border: 1px solid #E6E8EB; 
+}
+
+.chart-container-with-legend {
+  width: 100%;
+}
+
+.custom-chart-legend {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 16px; 
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #333;
+}
+
+.legend-icon-actual {
+  width: 16px;
+  height: 16px;
+  background-color: #0d47a1;
+  opacity: 0.6;
+  border: 1px solid #0d47a1;
+}
+
+.legend-icon-forecast {
+  width: 16px;
+  height: 16px;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 2px,
+    #3F51B5 2px,
+    #3F51B5 4px
+  );
+  border: 1px solid #3F51B5;
+}

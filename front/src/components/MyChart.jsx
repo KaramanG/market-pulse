@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -28,6 +28,22 @@ const formatXAxis = (tickItem, period) => {
     return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
 };
 
+const renderCustomLegend = () => {
+  return (
+    <div className="custom-chart-legend">
+      <div className="legend-item">
+        <div className="legend-icon-actual"></div>
+        <span>Прошлые показатели</span>
+      </div>
+      <div className="legend-item">
+        <div className="legend-icon-forecast"></div>
+        <span>Прогнозные показатели</span>
+      </div>
+    </div>
+  );
+};
+
+
 function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
   const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,23 +52,18 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
   useEffect(() => {
     const analyzeAndReportGap = (data) => {
         if (!onGapCheck) return;
-
         const forecastGapPoints = data.filter(p => p.type === 'forecast' && p.value < 0);
-
         if (forecastGapPoints.length === 0) {
             onGapCheck(null);
             return;
         }
-
         const startDate = forecastGapPoints[0].date;
         const endDate = forecastGapPoints[forecastGapPoints.length - 1].date;
-        
         const paymentsForDetails = forecastGapPoints.map(point => ({
             date: point.date,
             description: point.purpose || 'Прогнозный платеж',
             amount: point.transactionAmount || point.value
         }));
-
         onGapCheck({
             startDate: startDate,
             endDate: endDate,
@@ -72,9 +83,7 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
         }
         const response = await axios.get(`http://localhost:5000/api/account-history/${accountNumber}`, { params });
         const { actual, forecast } = response.data;
-        const todayBoundary = new Date();
-        todayBoundary.setHours(0, 0, 0, 0);
-
+        
         let allPoints = [...actual];
         if (period === 'week') { allPoints.push(...forecast); }
         allPoints.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -82,14 +91,14 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
         let processedData = allPoints.map(p => ({
           ...p,
           date: new Date(p.date), 
-          type: new Date(p.date) < todayBoundary ? 'actual' : 'forecast'
+          type: new Date(p.date) < new Date().setHours(0,0,0,0) ? 'actual' : 'forecast'
         }));
         
         if (period === 'week') {
             const lastActualIndex = processedData.findLastIndex(p => p.type === 'actual');
             if (lastActualIndex !== -1 && lastActualIndex < processedData.length - 1) {
               const lastActualPoint = processedData[lastActualIndex];
-              const bridgePoint = { ...lastActualPoint, date: todayBoundary, type: 'forecast', isBridge: true };
+              const bridgePoint = { ...lastActualPoint, date: new Date().setHours(0,0,0,0), type: 'forecast', isBridge: true };
               processedData.splice(lastActualIndex + 1, 0, bridgePoint);
             }
         }
@@ -137,32 +146,39 @@ function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
   const forecastColor = "#3F51B5";
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
-      <ComposedChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-        <defs>
-          <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor={actualColor} stopOpacity={0.8}/>
-            <stop offset="95%" stopColor={actualColor} stopOpacity={0.3}/>
-          </linearGradient>
-          <pattern id="pattern-forecast" width="12" height="8" patternUnits="userSpaceOnUse">
-            <rect width="3" height="8" fill={forecastColor} fillOpacity="0.9"></rect>
-          </pattern>
-        </defs>
-        <XAxis dataKey="date" tickFormatter={(tick) => formatXAxis(tick, period)} angle={-30} textAnchor="end" height={60} dy={10} />
-        <YAxis tickFormatter={(value) => `${Math.round(value / 1000)} тыс.`} ticks={yAxisTicks} domain={[yAxisTicks[yAxisTicks.length - 1], yAxisTicks[0]]} />
-        <CartesianGrid strokeDasharray="3 3" />
-        <Tooltip content={<CustomTooltip />} />
-        <ReferenceLine y={0} stroke="#666" strokeWidth={1}/>
-        <Area type="monotone" dataKey="value_actual" name="value_actual" fill="url(#colorActual)" stroke="none" baseValue={0} />
-        {period === 'week' && (
-            <>
-                <Area type="monotone" dataKey="value_forecast" name="value_forecast" fill="url(#pattern-forecast)" stroke="none" baseValue={0} />
-                <Line type="monotone" dataKey="value_forecast" name="value_forecast" stroke={forecastColor} strokeWidth={2} dot={{ r: 3, fill: '#fff', stroke: forecastColor, strokeWidth: 1 }} />
-            </>
-        )}
-        <Line type="monotone" dataKey="value_actual" name="value_actual" stroke={actualColor} strokeWidth={2} dot={{r: 4}} activeDot={{ r: 6 }} />
-      </ComposedChart>
-    </ResponsiveContainer>
+    <div className="chart-container-with-legend">
+      <ResponsiveContainer width="100%" height={400}>
+        <ComposedChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+          <defs>
+            <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={actualColor} stopOpacity={0.8}/>
+              <stop offset="95%" stopColor={actualColor} stopOpacity={0.3}/>
+            </linearGradient>
+            <pattern id="pattern-forecast" width="12" height="8" patternUnits="userSpaceOnUse">
+              <rect width="3" height="8" fill={forecastColor} fillOpacity="0.9"></rect>
+            </pattern>
+          </defs>
+          <XAxis dataKey="date" tickFormatter={(tick) => formatXAxis(tick, period)} angle={-30} textAnchor="end" height={60} dy={10} />
+          <YAxis tickFormatter={(value) => `${Math.round(value / 1000)} тыс.`} ticks={yAxisTicks} domain={[yAxisTicks[yAxisTicks.length - 1], yAxisTicks[0]]} />
+          <CartesianGrid strokeDasharray="3 3" />
+          <Tooltip content={<CustomTooltip />} />
+          
+          <ReferenceLine y={0} stroke="#666" strokeWidth={1}/>
+          <Area type="monotone" dataKey="value_actual" fill="url(#colorActual)" stroke="none" baseValue={0} />
+          
+          {period === 'week' && (
+              <>
+                  <Area type="monotone" dataKey="value_forecast" fill="url(#pattern-forecast)" stroke="none" baseValue={0} />
+                  <Line type="monotone" dataKey="value_forecast" stroke={forecastColor} strokeWidth={2} dot={{ r: 3, fill: '#fff', stroke: forecastColor, strokeWidth: 1 }} />
+              </>
+          )}
+
+          <Line type="monotone" dataKey="value_actual" stroke={actualColor} strokeWidth={2} dot={{r: 4}} activeDot={{ r: 6 }} />
+        </ComposedChart>
+      </ResponsiveContainer>
+      
+      {renderCustomLegend()}
+    </div>
   );
 }
 
