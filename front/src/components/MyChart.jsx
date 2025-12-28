@@ -1,0 +1,231 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import axios from 'axios';
+import { ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    const pointData = payload.find(p => p.payload.value !== null && p.payload.value !== undefined)?.payload;
+    if (!pointData) return null;
+
+    return (
+      <div style={{ background: 'white', padding: '10px', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+        <p style={{ margin: 0, fontSize: '12px', color: '#666' }}>{new Date(label).toLocaleDateString('ru-RU', {day: 'numeric', month: 'long'})}</p>
+        <p style={{ margin: '5px 0 0', color: pointData.value >= 0 ? 'green' : '#d9534f', fontWeight: 'bold' }}>
+          {`${pointData.value.toLocaleString('ru-RU')} ₽`}
+        </p>
+        <small style={{ color: '#555' }}>{pointData.type === 'forecast' ? 'Прогнозный баланс' : 'Фактический баланс'}</small>
+      </div>
+    );
+  }
+  return null;
+};
+
+const formatXAxis = (tickItem, period) => {
+    const date = new Date(tickItem);
+    if (period === 'year') {
+        return date.toLocaleDateString('ru-RU', { month: 'short', year: '2-digit' });
+    }
+    return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+};
+
+const renderCustomLegend = () => {
+  return (
+    <div className="custom-chart-legend">
+      <div className="legend-item">
+        <div className="legend-icon-actual"></div>
+        <span>Прошлые показатели</span>
+      </div>
+      <div className="legend-item">
+        <div className="legend-icon-forecast"></div>
+        <span>Прогнозные показатели</span>
+      </div>
+    </div>
+  );
+};
+
+
+function MyChart({ period, selectedMonth, dataVersion, onGapCheck }) {
+  const [chartData, setChartData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const analyzeAndReportGap = (data) => {
+        if (!onGapCheck) return;
+        const forecastGapPoints = data.filter(p => p.type === 'forecast' && p.value < 0);
+        if (forecastGapPoints.length === 0) {
+            onGapCheck(null);
+            return;
+        }
+
+        const startDate = forecastGapPoints[0].date;
+        const endDate = forecastGapPoints[forecastGapPoints.length - 1].date;
+        const minValue = Math.min(...forecastGapPoints.map(p => p.value));
+
+        const paymentsForDetails = forecastGapPoints.map(point => ({
+            date: point.date,
+            description: point.purpose || 'Прогнозный платеж',
+            amount: point.transactionAmount || point.value
+        }));
+        
+        onGapCheck({
+            startDate: startDate,
+            endDate: endDate,
+            payments: paymentsForDetails,
+            minValue: minValue 
+        });
+    };
+    
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const accountNumber = 1;
+        const params = new URLSearchParams();
+        params.append('period', period);
+        if (period === 'month' && selectedMonth) {
+          params.append('month', selectedMonth);
+        }
+        const response = await axios.get(`http://localhost:5000/api/account-history/${accountNumber}`, { params });
+        const { actual, forecast } = response.data;
+        
+        const actualData = actual.map(p => ({ ...p, type: 'actual' }));
+        const forecastData = forecast.map(p => ({ ...p, type: 'forecast' }));
+
+        let allPoints = [...actualData];
+        if (period === 'week') { 
+            allPoints.push(...forecastData); 
+        }
+        allPoints.sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+        let processedData = allPoints.map(p => ({
+          ...p,
+          date: new Date(p.date), 
+        }));
+        
+        if (period === 'week') {
+            const lastActualIndex = processedData.findLastIndex(p => p.type === 'actual');
+            if (lastActualIndex !== -1 && lastActualIndex < processedData.length - 1) {
+              const lastActualPoint = processedData[lastActualIndex];
+              const nextPointDate = new Date(processedData[lastActualIndex + 1].date);
+              const bridgeDate = new Date(new Date().setHours(0,0,0,0));
+
+              if(nextPointDate.getTime() !== bridgeDate.getTime()){
+                const bridgePoint = { ...lastActualPoint, date: bridgeDate, type: 'forecast', isBridge: true };
+                processedData.splice(lastActualIndex + 1, 0, bridgePoint);
+              }
+            }
+        }
+        
+        const finalData = processedData.map(p => ({
+            ...p,
+            value_actual: (p.type === 'actual' || p.isBridge) ? p.value : null,
+            value_forecast: (p.type === 'forecast' || p.isBridge) ? p.value : null,
+        }));
+
+        setChartData(finalData);
+        analyzeAndReportGap(processedData);
+
+      } catch (err) {
+        setError("Не удалось загрузить данные для графика.");
+        console.error("Ошибка при загрузке данных для графика:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [period, selectedMonth, dataVersion, onGapCheck]);
+
+  const yAxisConfig = useMemo(() => {
+    if (chartData.length === 0) {
+        return { domain: [0, 0], ticks: [0] };
+    }
+    const allValues = chartData.map(p => p.value).filter(v => v !== null && v !== undefined);
+    if (allValues.length === 0) {
+        return { domain: [0, 0], ticks: [0] };
+    }
+
+    const yMax = Math.max(...allValues);
+    const yMin = Math.min(...allValues);
+    
+    const step = 100000; 
+
+    const top = Math.ceil(Math.max(yMax, 0) / step) * step;
+    const bottom = Math.floor(Math.min(yMin, 0) / step) * step;
+    const ticksSet = new Set();
+    
+    for (let i = top; i >= bottom; i -= step) {
+        ticksSet.add(i);
+    }
+
+    if (top > 0 && bottom < 0) {
+        ticksSet.add(0);
+    }
+    
+    const ticksArray = Array.from(ticksSet).sort((a, b) => a - b);
+
+    return {
+        domain: [bottom, top],
+        ticks: ticksArray
+    };
+  }, [chartData]);
+
+
+  const hasForecastData = useMemo(() => 
+    chartData.some(p => p.value_forecast !== null),
+    [chartData]
+  );
+
+
+  if (loading) return <div>Загрузка графика...</div>;
+  if (error) return <div style={{ color: 'red' }}>{error}</div>;
+  if (chartData.length === 0) return <div style={{ textAlign: 'center', padding: '50px' }}>Нет данных для отображения.</div>;
+  
+  const actualColor = "#0d47a1";
+  const forecastColor = "#3F51B5";
+
+  return (
+    <div className="chart-container-with-legend">
+      <ResponsiveContainer width="100%" height={400}>
+        <ComposedChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+          <defs>
+            <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={actualColor} stopOpacity={0.8}/>
+              <stop offset="95%" stopColor={actualColor} stopOpacity={0.3}/>
+            </linearGradient>
+            <pattern id="pattern-forecast" width="12" height="8" patternUnits="userSpaceOnUse">
+              <rect width="3" height="8" fill={forecastColor} fillOpacity="0.9"></rect>
+            </pattern>
+          </defs>
+          <XAxis dataKey="date" tickFormatter={(tick) => formatXAxis(tick, period)} angle={-30} textAnchor="end" height={60} dy={10} />
+          
+          <YAxis 
+            tickFormatter={(value) => `${Math.round(value / 1000)} тыс.`} 
+            domain={yAxisConfig.domain}
+            ticks={yAxisConfig.ticks}
+          />
+          
+          <CartesianGrid strokeDasharray="3 3" />
+          <Tooltip content={<CustomTooltip />} />
+          <ReferenceLine y={0} stroke="#666" strokeWidth={1} strokeOpacity={0.8} />
+          
+          <Area type="monotone" dataKey="value_actual" fill="url(#colorActual)" stroke="none" baseValue={0} />
+          
+          {period === 'week' && (
+              <>
+                  <Area type="monotone" dataKey="value_forecast" fill="url(#pattern-forecast)" stroke="none" baseValue={0} />
+                  <Line type="monotone" dataKey="value_forecast" stroke={forecastColor} strokeWidth={2} dot={{ r: 3, fill: '#fff', stroke: forecastColor, strokeWidth: 1 }} />
+              </>
+          )}
+
+          <Line type="monotone" dataKey="value_actual" stroke={actualColor} strokeWidth={2} dot={{r: 4}} activeDot={{ r: 6 }} />
+        </ComposedChart>
+      </ResponsiveContainer>
+      
+      {hasForecastData && renderCustomLegend()}
+    </div>
+  );
+}
+
+export default MyChart;

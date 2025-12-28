@@ -1,0 +1,28 @@
+[{
+  "_id": {
+    "$oid": "687e1f570dd268bcda20c341"
+  },
+  "payment_date": {
+    "$date": "2025-07-24T00:00:00.000Z"
+  },
+  "amount": 2000,
+  "purpose": "test",
+  "creation_date": {
+    "$date": "2025-07-21T11:07:03.582Z"
+  },
+  "user_id": 1
+},
+{
+  "_id": {
+    "$oid": "687e22450dd268bcda20c342"
+  },
+  "payment_date": {
+    "$date": "2025-07-25T00:00:00.000Z"
+  },
+  "amount": 3400,
+  "purpose": "тест2",
+  "creation_date": {
+    "$date": "2025-07-21T11:19:33.817Z"
+  },
+  "user_id": 1
+}]

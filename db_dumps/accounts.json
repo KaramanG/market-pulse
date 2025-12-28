@@ -1,0 +1,14 @@
+[
+    { "account_number": 1, "owner_name": "ООО \"Наша Компания\"", "initial_balance": 0 },
+    { "account_number": 2, "owner_name": "ООО \"Интернет-провайдер\"", "initial_balance": 0 },
+    { "account_number": 3, "owner_name": "ООО \"IT-Сервис\"", "initial_balance": 0 },
+    { "account_number": 4, "owner_name": "ООО \"Софт-Поставщик\"", "initial_balance": 0 },
+    { "account_number": 5, "owner_name": "ООО \"Канцтовары Плюс\"", "initial_balance": 0 },
+    { "account_number": 6, "owner_name": "ООО \"Зарплатный Проект\"", "initial_balance": 0 },
+    { "account_number": 7, "owner_name": "ООО \"Транспортная Компания\"", "initial_balance": 0 },
+    { "account_number": 8, "owner_name": "ООО \"Рекламное Агентство\"", "initial_balance": 0 },
+    { "account_number": 9, "owner_name": "ООО \"Сервис-Платформа\"", "initial_balance": 0 },
+    { "account_number": 10, "owner_name": "ООО \"Поставщик Оборудования\"", "initial_balance": 0 },
+    { "account_number": 11, "owner_name": "ООО \"КурьерСервисЭкспресс\"", "initial_balance": 0 },
+    { "account_number": 12, "owner_name": "ООО \"Личный счет\"", "initial_balance": 0 }
+  ]

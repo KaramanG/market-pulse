@@ -1,0 +1,117 @@
+.recommendations-container {
+    margin-top: 1.5rem;
+    padding: 24px;
+    border: 1px solid #E6E8EB;
+    border-radius: 16px;
+    background-color: #ffffff;
+}
+
+.recommendations-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.recommendations-header svg {
+    stroke: #0d47a1;
+    flex-shrink: 0;
+}
+
+.recommendations-header h3 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1f1f1f;
+}
+
+.recommendations-summary {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #595959;
+    margin-bottom: 24px;
+}
+
+.recommendations-summary strong {
+    color: #1f1f1f;
+}
+
+.recommendations-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.recommendations-table th,
+.recommendations-table td {
+    padding: 16px 12px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid #E6E8EB;
+}
+
+.recommendations-table tr:last-child td {
+    border-bottom: none;
+}
+
+.recommendations-table th {
+    font-size: 12px;
+    font-weight: 700;
+    color: #8c8c8c;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.recommendations-table td {
+    font-size: 16px;
+    color: #333;
+}
+
+.recommendations-table .solution-column {
+    width: 100%;
+}
+
+.recommendations-table th:first-child,
+.recommendations-table td:first-child {
+    width: 40px;
+    text-align: center;
+    padding-left: 0;
+    font-weight: 700;
+    color: #8c8c8c;
+}
+
+.recommendations-table th:last-child,
+.recommendations-table td:last-child {
+    text-align: right;
+    white-space: nowrap;
+    width: 200px;
+}
+
+.recommendations-table td:last-child {
+    font-weight: 700;
+    color: #d9534f;
+}
+
+.recommendations-table td strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #1f1f1f;
+    font-weight: 700;
+}
+
+.recommendations-table td small {
+    display: block;
+    color: #888;
+    font-style: normal;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.recommendations-footer-note {
+    font-size: 20px;
+    line-height: 1.6;
+    color: #1f1f1f;
+    font-weight: 700;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #E6E8EB;
+}

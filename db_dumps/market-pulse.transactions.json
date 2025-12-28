@@ -1,0 +1,744 @@
+[{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56ddd"
+  },
+  "transaction_id": 3,
+  "sender_account": 1,
+  "transaction_date": "2025-04-01T10:15:00Z",
+  "amount": 1000,
+  "transaction_type": "-",
+  "receiver_account": 3,
+  "purpose": "Оплата за IT-услуги"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56dde"
+  },
+  "transaction_id": 4,
+  "sender_account": 4,
+  "transaction_date": "2025-04-02T14:30:00Z",
+  "amount": 50000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата по счету #112"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56ddf"
+  },
+  "transaction_id": 5,
+  "sender_account": 1,
+  "transaction_date": "2025-04-03T09:05:00Z",
+  "amount": 5200,
+  "transaction_type": "-",
+  "receiver_account": 5,
+  "purpose": "Закупка канцтоваров"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56de0"
+  },
+  "transaction_id": 6,
+  "sender_account": 2,
+  "transaction_date": "2025-04-04T11:20:00Z",
+  "amount": 12000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Возврат средств"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56de1"
+  },
+  "transaction_id": 7,
+  "sender_account": 1,
+  "transaction_date": "2025-04-05T16:45:00Z",
+  "amount": 150000,
+  "transaction_type": "-",
+  "receiver_account": 6,
+  "purpose": "Зарплата за март"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56de2"
+  },
+  "transaction_id": 8,
+  "sender_account": 7,
+  "transaction_date": "2025-04-06T12:00:00Z",
+  "amount": 75000,
+  "transaction_type": "-",
+  "receiver_account": 1,
+  "purpose": "Аванс по договору #58-B"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56de3"
+  },
+  "transaction_id": 9,
+  "sender_account": 1,
+  "transaction_date": "2025-04-07T18:10:00Z",
+  "amount": 8900,
+  "transaction_type": "-",
+  "receiver_account": 2,
+  "purpose": "Оплата услуг связи"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56de4"
+  },
+  "transaction_id": 10,
+  "sender_account": 1,
+  "transaction_date": "2025-04-08T13:25:00Z",
+  "amount": 30000,
+  "transaction_type": "-",
+  "receiver_account": 8,
+  "purpose": "Рекламные услуги"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56de5"
+  },
+  "transaction_id": 11,
+  "sender_account": 3,
+  "transaction_date": "2025-04-09T09:55:00Z",
+  "amount": 18000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата по счету #114"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56de6"
+  },
+  "transaction_id": 12,
+  "sender_account": 1,
+  "transaction_date": "2025-04-10T15:00:00Z",
+  "amount": 45000,
+  "transaction_type": "-",
+  "receiver_account": 9,
+  "purpose": "Налоги и сборы"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56de7"
+  },
+  "transaction_id": 13,
+  "sender_account": 1,
+  "transaction_date": "2025-04-11T11:40:00Z",
+  "amount": 11200,
+  "transaction_type": "-",
+  "receiver_account": 2,
+  "purpose": "Оплата хостинга"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56de8"
+  },
+  "transaction_id": 14,
+  "sender_account": 5,
+  "transaction_date": "2025-04-12T10:00:00Z",
+  "amount": 60000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Продажа товара"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56de9"
+  },
+  "transaction_id": 15,
+  "sender_account": 1,
+  "transaction_date": "2025-04-13T14:20:00Z",
+  "amount": 22000,
+  "transaction_type": "-",
+  "receiver_account": 10,
+  "purpose": "Закупка оборудования"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56dea"
+  },
+  "transaction_id": 16,
+  "sender_account": 6,
+  "transaction_date": "2025-04-14T17:05:00Z",
+  "amount": 35000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата по счету #118"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56deb"
+  },
+  "transaction_id": 17,
+  "sender_account": 1,
+  "transaction_date": "2025-04-15T09:30:00Z",
+  "amount": 15000,
+  "transaction_type": "-",
+  "receiver_account": 3,
+  "purpose": "Аренда помещения"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56dec"
+  },
+  "transaction_id": 18,
+  "sender_account": 1,
+  "transaction_date": "2025-04-16T12:50:00Z",
+  "amount": 7800,
+  "transaction_type": "-",
+  "receiver_account": 11,
+  "purpose": "Курьерские услуги"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56ded"
+  },
+  "transaction_id": 19,
+  "sender_account": 8,
+  "transaction_date": "2025-04-17T15:15:00Z",
+  "amount": 95000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата за оказание услуг"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56dee"
+  },
+  "transaction_id": 20,
+  "sender_account": 1,
+  "transaction_date": "2025-04-18T10:10:00Z",
+  "amount": 18500,
+  "transaction_type": "-",
+  "receiver_account": 4,
+  "purpose": "Оплата за ПО"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56def"
+  },
+  "transaction_id": 21,
+  "sender_account": 9,
+  "transaction_date": "2025-04-19T13:00:00Z",
+  "amount": 21000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Возврат по договору #41-C"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56df0"
+  },
+  "transaction_id": 22,
+  "sender_account": 1,
+  "transaction_date": "2025-04-20T16:30:00Z",
+  "amount": 6400,
+  "transaction_type": "-",
+  "receiver_account": 5,
+  "purpose": "Хозяйственные расходы"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56df1"
+  },
+  "transaction_id": 23,
+  "sender_account": 10,
+  "transaction_date": "2025-04-21T11:55:00Z",
+  "amount": 110000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата по счету #125"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56df2"
+  },
+  "transaction_id": 24,
+  "sender_account": 1,
+  "transaction_date": "2025-04-22T09:45:00Z",
+  "amount": 19800,
+  "transaction_type": "-",
+  "receiver_account": 7,
+  "purpose": "Транспортные услуги"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56df3"
+  },
+  "transaction_id": 25,
+  "sender_account": 1,
+  "transaction_date": "2025-04-23T14:05:00Z",
+  "amount": 24000,
+  "transaction_type": "-",
+  "receiver_account": 3,
+  "purpose": "Оплата за консультацию"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56df4"
+  },
+  "transaction_id": 26,
+  "sender_account": 2,
+  "transaction_date": "2025-04-24T10:25:00Z",
+  "amount": 82000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата по договору поставки"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56df5"
+  },
+  "transaction_id": 27,
+  "sender_account": 1,
+  "transaction_date": "2025-04-25T17:10:00Z",
+  "amount": 33000,
+  "transaction_type": "-",
+  "receiver_account": 8,
+  "purpose": "Маркетинговые исследования"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56df6"
+  },
+  "transaction_id": 28,
+  "sender_account": 4,
+  "transaction_date": "2025-04-26T12:35:00Z",
+  "amount": 47000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата по счету #130"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56df7"
+  },
+  "transaction_id": 29,
+  "sender_account": 1,
+  "transaction_date": "2025-04-27T09:00:00Z",
+  "amount": 9500,
+  "transaction_type": "-",
+  "receiver_account": 9,
+  "purpose": "Оплата за доступ к сервису"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56df8"
+  },
+  "transaction_id": 30,
+  "sender_account": 1,
+  "transaction_date": "2025-04-28T15:40:00Z",
+  "amount": 50000,
+  "transaction_type": "-",
+  "receiver_account": 12,
+  "purpose": "Перевод собственных средств"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56df9"
+  },
+  "transaction_id": 31,
+  "sender_account": 11,
+  "transaction_date": "2025-04-29T11:11:00Z",
+  "amount": 150000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Инвестиционный взнос"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56dfa"
+  },
+  "transaction_id": 32,
+  "sender_account": 1,
+  "transaction_date": "2025-04-30T18:00:00Z",
+  "amount": 15000,
+  "transaction_type": "-",
+  "receiver_account": 2,
+  "purpose": "Аренда помещения (следующий месяц)"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56dfb"
+  },
+  "transaction_id": 1,
+  "sender_account": 5,
+  "transaction_date": "2025-01-15T09:30:00Z",
+  "amount": 150000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Аванс по договору №12-А от 10.01.2025"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56dfc"
+  },
+  "transaction_id": 2,
+  "sender_account": 1,
+  "transaction_date": "2025-02-05T11:00:00Z",
+  "amount": 85000,
+  "transaction_type": "-",
+  "receiver_account": 10,
+  "purpose": "Аренда офиса за февраль 2025"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56dfd"
+  },
+  "transaction_id": 3,
+  "sender_account": 7,
+  "transaction_date": "2025-03-20T14:05:00Z",
+  "amount": 320000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата по счету №2025-03-158"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56dfe"
+  },
+  "transaction_id": 4,
+  "sender_account": 1,
+  "transaction_date": "2025-04-10T10:15:00Z",
+  "amount": 25500,
+  "transaction_type": "-",
+  "receiver_account": 12,
+  "purpose": "Закупка канцтоваров и офисных принадлежностей"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56dff"
+  },
+  "transaction_id": 5,
+  "sender_account": 2,
+  "transaction_date": "2025-05-18T16:45:00Z",
+  "amount": 95000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оказание консалтинговых услуг"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56e00"
+  },
+  "transaction_id": 6,
+  "sender_account": 1,
+  "transaction_date": "2025-06-28T12:00:00Z",
+  "amount": 210000,
+  "transaction_type": "-",
+  "receiver_account": 15,
+  "purpose": "Зарплатный проект, выплата за июнь 2025"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56e01"
+  },
+  "transaction_id": 7,
+  "sender_account": 9,
+  "transaction_date": "2025-07-15T11:20:00Z",
+  "amount": 75000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Роялти за использование ПО (2 квартал)"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56e02"
+  },
+  "transaction_id": 8,
+  "sender_account": 1,
+  "transaction_date": "2025-08-01T09:00:00Z",
+  "amount": 15000,
+  "transaction_type": "-",
+  "receiver_account": 22,
+  "purpose": "Оплата хостинга и продление домена"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56e03"
+  },
+  "transaction_id": 9,
+  "sender_account": 11,
+  "transaction_date": "2025-09-22T17:55:00Z",
+  "amount": 450000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Поступление от клиента 'ТехноПром' по акту №789"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56e04"
+  },
+  "transaction_id": 10,
+  "sender_account": 1,
+  "transaction_date": "2025-10-12T13:10:00Z",
+  "amount": 120000,
+  "transaction_type": "-",
+  "receiver_account": 30,
+  "purpose": "Рекламная кампания в Яндекс.Директ"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56e05"
+  },
+  "transaction_id": 11,
+  "sender_account": 4,
+  "transaction_date": "2025-11-25T18:00:00Z",
+  "amount": 280000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата за разработку веб-сайта по договору"
+},
+{
+  "_id": {
+    "$oid": "6877f2081f85546d70c56e06"
+  },
+  "transaction_id": 12,
+  "sender_account": 1,
+  "transaction_date": "2025-12-21T15:00:00Z",
+  "amount": 65000,
+  "transaction_type": "-",
+  "receiver_account": 41,
+  "purpose": "Закупка корпоративных подарков партнерам"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e07"
+  },
+  "transaction_id": 33,
+  "sender_account": 1,
+  "transaction_date": "2025-07-01T10:00:00Z",
+  "amount": 12500,
+  "transaction_type": "-",
+  "receiver_account": 15,
+  "purpose": "Коммунальные платежи за июнь"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e08"
+  },
+  "transaction_id": 34,
+  "sender_account": 18,
+  "transaction_date": "2025-07-02T14:30:00Z",
+  "amount": 240000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата по акту выполненных работ №А-55"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e09"
+  },
+  "transaction_id": 35,
+  "sender_account": 1,
+  "transaction_date": "2025-07-03T11:20:00Z",
+  "amount": 78000,
+  "transaction_type": "-",
+  "receiver_account": 19,
+  "purpose": "Закупка оргтехники (3 ноутбука)"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e0a"
+  },
+  "transaction_id": 36,
+  "sender_account": 1,
+  "transaction_date": "2025-07-05T09:15:00Z",
+  "amount": 310000,
+  "transaction_type": "-",
+  "receiver_account": 20,
+  "purpose": "Выплата зарплаты сотрудникам за июнь"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e0b"
+  },
+  "transaction_id": 37,
+  "sender_account": 21,
+  "transaction_date": "2025-07-07T16:00:00Z",
+  "amount": 89000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Поступление от клиента 'СтройМастер'"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e0c"
+  },
+  "transaction_id": 38,
+  "sender_account": 1,
+  "transaction_date": "2025-07-08T12:05:00Z",
+  "amount": 34000,
+  "transaction_type": "-",
+  "receiver_account": 22,
+  "purpose": "Рекламная кампания (ВКонтакте)"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e0d"
+  },
+  "transaction_id": 39,
+  "sender_account": 1,
+  "transaction_date": "2025-07-10T10:50:00Z",
+  "amount": 9900,
+  "transaction_type": "-",
+  "receiver_account": 23,
+  "purpose": "Продление лицензии на ПО 'CRM-System'"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e0e"
+  },
+  "transaction_id": 40,
+  "sender_account": 24,
+  "transaction_date": "2025-07-11T15:00:00Z",
+  "amount": 115000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата услуг по договору #15-C"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e0f"
+  },
+  "transaction_id": 41,
+  "sender_account": 1,
+  "transaction_date": "2025-07-12T11:00:00Z",
+  "amount": 18000,
+  "transaction_type": "-",
+  "receiver_account": 25,
+  "purpose": "Представительские расходы (бизнес-ланч)"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e10"
+  },
+  "transaction_id": 42,
+  "sender_account": 26,
+  "transaction_date": "2025-07-14T17:30:00Z",
+  "amount": 52000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Возврат переплаты по налогам"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e11"
+  },
+  "transaction_id": 43,
+  "sender_account": 1,
+  "transaction_date": "2025-07-15T09:45:00Z",
+  "amount": 41000,
+  "transaction_type": "-",
+  "receiver_account": 27,
+  "purpose": "Логистические услуги (доставка груза)"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e12"
+  },
+  "transaction_id": 44,
+  "sender_account": 28,
+  "transaction_date": "2025-07-16T13:20:00Z",
+  "amount": 310000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата от 'ТехноИнвест' по счету #T-009"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e13"
+  },
+  "transaction_id": 45,
+  "sender_account": 1,
+  "transaction_date": "2025-07-17T10:00:00Z",
+  "amount": 16500,
+  "transaction_type": "-",
+  "receiver_account": 29,
+  "purpose": "Заказ воды и кофе в офис"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e14"
+  },
+  "transaction_id": 46,
+  "sender_account": 1,
+  "transaction_date": "2025-07-18T16:10:00Z",
+  "amount": 88000,
+  "transaction_type": "-",
+  "receiver_account": 30,
+  "purpose": "Юридическое сопровождение сделки"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e15"
+  },
+  "transaction_id": 47,
+  "sender_account": 31,
+  "transaction_date": "2025-07-21T11:55:00Z",
+  "amount": 75000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Оплата за консультационные услуги"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e16"
+  },
+  "transaction_id": 48,
+  "sender_account": 1,
+  "transaction_date": "2025-07-22T18:00:00Z",
+  "amount": 120000,
+  "transaction_type": "-",
+  "receiver_account": 32,
+  "purpose": "Налоговые отчисления (НДС за 2 квартал)"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e17"
+  },
+  "transaction_id": 49,
+  "sender_account": 33,
+  "transaction_date": "2025-07-24T14:00:00Z",
+  "amount": 18000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Возврат от поставщика 'АльфаСнаб'"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e18"
+  },
+  "transaction_id": 50,
+  "sender_account": 1,
+  "transaction_date": "2025-07-25T09:30:00Z",
+  "amount": 85000,
+  "transaction_type": "-",
+  "receiver_account": 10,
+  "purpose": "Аренда офиса за август 2025"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e19"
+  },
+  "transaction_id": 51,
+  "sender_account": 1,
+  "transaction_date": "2025-07-28T15:20:00Z",
+  "amount": 5500,
+  "transaction_type": "-",
+  "receiver_account": 34,
+  "purpose": "Оплата интернет-банкинга"
+},
+{
+  "_id": {
+    "$oid": "6877faec1f85546d70c56e1a"
+  },
+  "transaction_id": 52,
+  "sender_account": 35,
+  "transaction_date": "2025-07-30T12:00:00Z",
+  "amount": 195000,
+  "transaction_type": "+",
+  "receiver_account": 1,
+  "purpose": "Финальный расчет по договору №44-F"
+}]

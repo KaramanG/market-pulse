@@ -1,0 +1,116 @@
+.notification-box {
+    position: relative;
+    padding: 16px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column; 
+    align-items: flex-start;
+    border: 1px solid transparent;
+    font-size: 14px;
+}
+
+.notification-main {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+}
+
+.notification-icon {
+    margin-right: 12px;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+}
+
+.notification-box.ok {
+    background-color: #f6ffed;
+    border-color: #b7eb8f;
+}
+
+.notification-box.ok .notification-icon {
+    fill: #52c41a;
+}
+
+.notification-box.warning {
+    background-color: #fffbe6;
+    border-color: #ffe58f;
+}
+
+.notification-box.warning .notification-icon {
+    fill: #faad14;
+}
+
+.notification-text {
+    width: 100%; 
+}
+
+.notification-text p {
+    margin: 0 0 4px 0;
+    font-weight: 700;
+    color: #1f1f1f;
+    font-size: 16px; 
+}
+
+.notification-text small {
+    color: #595959;
+    line-height: 1.4;
+    font-size: 14px;
+}
+
+.details-link {
+    display: block;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: normal;
+    color: #0d47a1;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.details-link:hover {
+    text-decoration: none;
+}
+
+.payment-details {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background-color: #fffbe6;
+  border: 1px solid #ffe58f;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+}
+
+.payment-details table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+}
+
+.payment-details th,
+.payment-details td {
+  border: 1px solid #f0f0f0;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 14px;
+  color: #333;
+  vertical-align: middle;
+}
+
+.payment-details th {
+  background-color: #fafafa;
+  font-weight: 600;
+  color: #595959;
+}
+
+.payment-details tbody tr:nth-of-type(odd) {
+  background-color: #fcfcfc;
+}

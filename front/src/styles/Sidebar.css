@@ -1,0 +1,46 @@
+.sidebar {
+  background: transparent;
+  padding: 1rem;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.sidebar-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  /*padding-top: 1rem; лишний отступ в начале*/
+}
+
+.sidebar-menu li {
+  margin-bottom: 10px;
+}
+
+.sidebar-menu a {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  outline: none;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a:focus-visible,
+.sidebar-menu a:active {
+  background-color: #D73326;
+  color: #ffffff;
+}
+
+.sidebar-icon {
+  flex-shrink: 0;
+}
+
+.sidebar-menu a:hover .sidebar-icon,
+.sidebar-menu a:focus-visible .sidebar-icon,
+.sidebar-menu a:active .sidebar-icon {
+  color: #ffffff;
+}
